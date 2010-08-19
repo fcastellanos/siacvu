@@ -509,7 +509,10 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers.Productos
 
             var form = articuloMapper.Map(articulo);
 
-            return Rjs("Activate", form);
+            SetMessage(String.Format("Artículo en revistas de investigación {0} ha sido eliminado", articulo.Titulo));
+
+            return Rjs("Save", articulo.Id);
+            //return Rjs("Activate", form);
         }
 
         ArticuloForm SetupNewForm()
