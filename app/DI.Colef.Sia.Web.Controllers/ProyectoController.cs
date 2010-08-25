@@ -858,6 +858,22 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers
             return Rjs("DeleteProducto", form);
         }
 
+        [Authorize]
+        [AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult Deactivate(int id)
+        {
+            var proyecto = proyectoService.GetProyectoById(id);
+
+            proyecto.Activo = false;
+            proyecto.ModificadoPor = CurrentUser();
+
+            proyectoService.SaveProyecto(proyecto, true);
+
+            var proyectoForm = proyectoMapper.Map(proyecto);
+
+            return Rjs("Deactivate", proyectoForm);
+        }
+
         ProyectoForm SetupNewForm()
         {
             return SetupNewForm(null);

@@ -681,6 +681,22 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers.Productos
             return Rjs("DeleteAutorExterno", form);
         }
 
+        [Authorize]
+        [AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult Deactivate(int id)
+        {
+            var capitulo = capituloService.GetCapituloById(id);
+
+            capitulo.Activo = false;
+            capitulo.ModificadoPor = CurrentUser();
+
+            capituloService.SaveCapitulo(capitulo, true);
+
+            var capituloForm = capituloMapper.Map(capitulo);
+
+            return Rjs("Deactivate", capituloForm);
+        }
+
         CapituloForm SetupNewForm()
         {
             return SetupNewForm(null);

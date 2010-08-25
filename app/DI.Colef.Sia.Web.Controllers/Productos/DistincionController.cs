@@ -175,6 +175,22 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers.Productos
             return Content(data);
         }
 
+        [Authorize]
+        [AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult Deactivate(int id)
+        {
+            var distincion = distincionService.GetDistincionById(id);
+
+            distincion.Activo = false;
+            distincion.ModificadoPor = CurrentUser();
+
+            distincionService.SaveDistincion(distincion, true);
+
+            var distincionForm = distincionMapper.Map(distincion);
+
+            return Rjs("Deactivate", distincionForm);
+        }
+
         DistincionForm SetupNewForm()
         {
             return SetupNewForm(null);

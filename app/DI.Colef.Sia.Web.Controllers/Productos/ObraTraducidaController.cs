@@ -703,6 +703,22 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers.Productos
             return Rjs("DeleteAutorExterno", form);
         }
 
+        [Authorize]
+        [AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult Deactivate(int id)
+        {
+            var obraTraducida = obraTraducidaService.GetObraTraducidaById(id);
+
+            obraTraducida.Activo = false;
+            obraTraducida.ModificadoPor = CurrentUser();
+
+            obraTraducidaService.SaveObraTraducida(obraTraducida, true);
+
+            var obraTraducidaForm = obraTraducidaMapper.Map(obraTraducida);
+
+            return Rjs("Deactivate", obraTraducidaForm);
+        }
+
         ObraTraducidaForm SetupNewForm()
         {
             return SetupNewForm(null);

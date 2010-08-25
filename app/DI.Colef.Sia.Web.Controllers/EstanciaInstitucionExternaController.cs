@@ -156,6 +156,22 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers
             return Content(data);
         }
 
+        [Authorize]
+        [AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult Deactivate(int id)
+        {
+            var estancia = estanciaInstitucionExternaService.GetEstanciaInstitucionExternaById(id);
+
+            estancia.Activo = false;
+            estancia.ModificadoPor = CurrentUser();
+
+            estanciaInstitucionExternaService.SaveEstanciaInstitucionExterna(estancia);
+
+            var estanciaForm = estanciaInstitucionExternaMapper.Map(estancia);
+
+            return Rjs("Deactivate", estanciaForm);
+        }
+
         EstanciaInstitucionExternaForm SetupNewForm()
         {
             return SetupNewForm(null);

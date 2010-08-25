@@ -540,6 +540,22 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers.Productos
             return Rjs("AddEvento", eventoForm);
         }
 
+        [Authorize]
+        [AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult Deactivate(int id)
+        {
+            var libro = libroService.GetLibroById(id);
+
+            libro.Activo = false;
+            libro.ModificadoPor = CurrentUser();
+
+            libroService.SaveLibro(libro, true);
+
+            var libroForm = libroMapper.Map(libro);
+
+            return Rjs("Deactivate", libroForm);
+        }
+
         protected override void DeleteEditorialInModel(Libro model, int editorialId)
         {
             if (model != null)
@@ -606,7 +622,7 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers.Productos
             form.LineasTematicas = lineaTematicaMapper.Map(catalogoService.GetActiveLineaTematicas());
 
             form.Ediciones = customCollection.EdicionCustomCollection();
-            form.TiposProductos = customCollection.TipoProductoCustomCollection(7);
+            form.TiposLibros = customCollection.TipoProductoCustomCollection(7);
             form.EstadosProductos = customCollection.EstadoProductoCustomCollection();
             form.FormatosPublicaciones = customCollection.FormatoPublicacionCustomCollection();
             form.ContenidosLibros = customCollection.ContenidoLibroCustomCollection();

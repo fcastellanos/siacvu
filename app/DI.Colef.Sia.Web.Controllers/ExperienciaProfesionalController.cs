@@ -161,6 +161,22 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers
             return Content(data);
         }
 
+        [Authorize]
+        [AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult Deactivate(int id)
+        {
+            var experienciaProfesional = experienciaProfesionalService.GetExperienciaProfesionalById(id);
+
+            experienciaProfesional.Activo = false;
+            experienciaProfesional.ModificadoPor = CurrentUser();
+
+            experienciaProfesionalService.SaveExperienciaProfesional(experienciaProfesional);
+
+            var experienciaProfesionalForm = experienciaProfesionalMapper.Map(experienciaProfesional);
+
+            return Rjs("Deactivate", experienciaProfesionalForm);
+        }
+
         ExperienciaProfesionalForm SetupNewForm()
         {
             return SetupNewForm(null);

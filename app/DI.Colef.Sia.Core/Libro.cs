@@ -76,7 +76,7 @@ namespace DecisionesInteligentes.Colef.Sia.Core
 
         public virtual int FormatoPublicacion { get; set; }
 
-        public virtual int TipoProducto { get; set; }
+        public virtual int TipoLibro { get; set; }
 
         public virtual int ContenidoLibro { get; set; }
 

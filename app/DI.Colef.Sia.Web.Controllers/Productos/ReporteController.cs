@@ -500,6 +500,22 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers.Productos
             return Rjs("DeleteCoautorExterno", form);
         }
 
+        [Authorize]
+        [AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult Deactivate(int id)
+        {
+            var reporte = reporteService.GetReporteById(id);
+
+            reporte.Activo = false;
+            reporte.ModificadoPor = CurrentUser();
+
+            reporteService.SaveReporte(reporte, true);
+
+            var reporteForm = reporteMapper.Map(reporte);
+
+            return Rjs("Deactivate", reporteForm);
+        }
+
         //[Authorize]
         //[AcceptVerbs(HttpVerbs.Get)]
         //public ActionResult NewInstitucion(int id)

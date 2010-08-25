@@ -264,6 +264,22 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers.Productos
             return Rjs("ChangeRevista", form);
         }
 
+        [Authorize]
+        [AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult Deactivate(int id)
+        {
+            var dictamen = dictamenService.GetDictamenById(id);
+
+            dictamen.Activo = false;
+            dictamen.ModificadoPor = CurrentUser();
+
+            dictamenService.SaveDictamen(dictamen, true);
+
+            var dictamenForm = dictamenMapper.Map(dictamen);
+
+            return Rjs("Deactivate", dictamenForm);
+        }
+
         DictamenForm SetupNewForm()
         {
             return SetupNewForm(null);

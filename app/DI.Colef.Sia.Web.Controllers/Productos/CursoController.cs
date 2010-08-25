@@ -287,6 +287,22 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers.Productos
             return Content(data);
         }
 
+        [Authorize]
+        [AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult Deactivate(int id)
+        {
+            var curso = cursoService.GetCursoById(id);
+
+            curso.Activo = false;
+            curso.ModificadoPor = CurrentUser();
+
+            cursoService.SaveCurso(curso, true);
+
+            var cursoForm = cursoMapper.Map(curso);
+
+            return Rjs("Deactivate", cursoForm);
+        }
+
         CursoForm SetupNewForm()
         {
             return SetupNewForm(null);

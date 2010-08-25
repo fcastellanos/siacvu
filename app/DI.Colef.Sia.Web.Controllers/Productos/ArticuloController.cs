@@ -478,23 +478,6 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers.Productos
             return Rjs("DeleteCoautorExterno", form);
         }
 
-        //[Authorize(Roles = "DGAA")]
-        //[CustomTransaction]
-        //[AcceptVerbs(HttpVerbs.Put)]
-        //public ActionResult Activate(int id)
-        //{
-        //    var articulo = articuloService.GetArticuloById(id);
-
-        //    articulo.Activo = true;
-        //    articulo.ModificadoPor = CurrentUser();
-
-        //    articuloService.SaveArticulo(articulo);
-
-        //    var form = articuloMapper.Map(articulo);
-
-        //    return Rjs("Activate", form);
-        //}
-
         [Authorize]
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult Deactivate(int id)
@@ -504,7 +487,7 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers.Productos
             articulo.Activo = false;
             articulo.ModificadoPor = CurrentUser();
 
-            //articuloService.SaveArticulo(articulo, true);
+            articuloService.SaveArticulo(articulo, true);
 
             var articuloForm = articuloMapper.Map(articulo);
 

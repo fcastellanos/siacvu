@@ -351,6 +351,22 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers
             return Rjs("DeleteCoautorInterno", form);
         }
 
+        [Authorize]
+        [AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult Deactivate(int id)
+        {
+            var grupoInvestigacion = grupoInvestigacionService.GetGrupoInvestigacionById(id);
+
+            grupoInvestigacion.Activo = false;
+            grupoInvestigacion.ModificadoPor = CurrentUser();
+
+            grupoInvestigacionService.SaveGrupoInvestigacion(grupoInvestigacion);
+
+            var grupoInvestigacionForm = grupoInvestigacionMapper.Map(grupoInvestigacion);
+
+            return Rjs("Deactivate", grupoInvestigacionForm);
+        }
+
         GrupoInvestigacionForm SetupNewForm()
         {
             return SetupNewForm(null);

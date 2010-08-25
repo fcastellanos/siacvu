@@ -708,6 +708,22 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers.Productos
             return Rjs("DeleteAutorExterno", form);
         }
 
+        [Authorize]
+        [AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult Deactivate(int id)
+        {
+            var resena = resenaService.GetResenaById(id);
+
+            resena.Activo = false;
+            resena.ModificadoPor = CurrentUser();
+
+            resenaService.SaveResena(resena, true);
+
+            var resenaForm = resenaMapper.Map(resena);
+
+            return Rjs("Deactivate", resenaForm);
+        }
+
         ResenaForm SetupNewForm()
         {
             return SetupNewForm(null);

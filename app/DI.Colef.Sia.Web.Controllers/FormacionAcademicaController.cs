@@ -185,6 +185,22 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers
             return Content(data);
         }
 
+        [Authorize]
+        [AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult Deactivate(int id)
+        {
+            var formacionAcademica = formacionAcademicaService.GetFormacionAcademicaById(id);
+
+            formacionAcademica.Activo = false;
+            formacionAcademica.ModificadoPor = CurrentUser();
+
+            formacionAcademicaService.SaveFormacionAcademica(formacionAcademica);
+
+            var formacionAcademicaForm = formacionAcademicaMapper.Map(formacionAcademica);
+
+            return Rjs("Deactivate", formacionAcademicaForm);
+        }
+
         FormacionAcademicaForm SetupNewForm()
         {
             return SetupNewForm(null);

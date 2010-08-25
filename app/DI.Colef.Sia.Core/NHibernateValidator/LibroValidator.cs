@@ -31,11 +31,11 @@ namespace DecisionesInteligentes.Colef.Sia.Core.NHibernateValidator
                 
             }
 
-            if (libro.TipoProducto == 0)
+            if (libro.TipoLibro == 0)
             {
                 constraintValidatorContext.DisableDefaultError();
                 constraintValidatorContext.AddInvalid<Libro, int>(
-                    "seleccione el tipo de producto|TipoProducto", x => x.TipoProducto);
+                    "seleccione el tipo de producto|TipoProducto", x => x.TipoLibro);
                 isValid = false;
             }
 

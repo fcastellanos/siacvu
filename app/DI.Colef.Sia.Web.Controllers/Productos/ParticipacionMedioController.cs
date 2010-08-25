@@ -233,6 +233,22 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers.Productos
             return Rjs("", null);
         }
 
+        [Authorize]
+        [AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult Deactivate(int id)
+        {
+            var participacionMedio = participacionMedioService.GetParticipacionMedioById(id);
+
+            participacionMedio.Activo = false;
+            participacionMedio.ModificadoPor = CurrentUser();
+
+            participacionMedioService.SaveParticipacionMedio(participacionMedio, true);
+
+            var participacionMedioForm = participacionMedioMapper.Map(participacionMedio);
+
+            return Rjs("Deactivate", participacionMedioForm);
+        }
+
         ParticipacionMedioForm SetupNewForm()
         {
             return SetupNewForm(null);

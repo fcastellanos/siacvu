@@ -27,7 +27,7 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers.Models
         public bool Activo { get; set; }
         public bool TieneProyecto { get; set; }
 
-        public int TipoProducto { get; set; }
+        public int TipoLibro { get; set; }
 
         public int Edicion { get; set; }
 
@@ -93,7 +93,7 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers.Models
         public ProyectoForm Proyecto { get; set; }
 		
 		/* Catalogos */
-        public CustomSelectForm[] TiposProductos { get; set; }
+        public CustomSelectForm[] TiposLibros { get; set; }
         public CustomSelectForm[] FormatosPublicaciones { get; set; }
         public CustomSelectForm[] ContenidosLibros { get; set; }
         public CustomSelectForm[] Ediciones { get; set; }

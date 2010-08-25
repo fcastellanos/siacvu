@@ -237,6 +237,22 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers.Productos
             return Content(data);
         }
 
+        [Authorize]
+        [AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult Deactivate(int id)
+        {
+            var organoExterno = organoExternoService.GetOrganoExternoById(id);
+
+            organoExterno.Activo = false;
+            organoExterno.ModificadoPor = CurrentUser();
+
+            organoExternoService.SaveOrganoExterno(organoExterno, true);
+
+            var organoExternoForm = organoExternoMapper.Map(organoExterno);
+
+            return Rjs("Deactivate", organoExternoForm);
+        }
+
         OrganoExternoForm SetupNewForm()
         {
             return SetupNewForm(null);

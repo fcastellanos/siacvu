@@ -290,6 +290,22 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers.Productos
             return Content(data);
         }
 
+        [Authorize]
+        [AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult Deactivate(int id)
+        {
+            var tesis = tesisDirigidaService.GetTesisDirigidaById(id);
+
+            tesis.Activo = false;
+            tesis.ModificadoPor = CurrentUser();
+
+            tesisDirigidaService.SaveTesisDirigida(tesis, true);
+
+            var tesisForm = tesisDirigidaMapper.Map(tesis);
+
+            return Rjs("Deactivate", tesisForm);
+        }
+
         TesisDirigidaForm SetupNewForm()
         {
             return SetupNewForm(null);

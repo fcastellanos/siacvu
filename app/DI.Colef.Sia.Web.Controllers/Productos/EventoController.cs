@@ -557,6 +557,22 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers.Productos
             return Rjs("DeleteCoautorExterno", form);
         }
 
+        [Authorize]
+        [AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult Deactivate(int id)
+        {
+            var evento = eventoService.GetEventoById(id);
+
+            evento.Activo = false;
+            evento.ModificadoPor = CurrentUser();
+
+            eventoService.SaveEvento(evento, true);
+
+            var eventoForm = eventoMapper.Map(evento);
+
+            return Rjs("Deactivate", eventoForm);
+        }
+
         protected override void DeleteInstitucionInModel(Evento model, int institucionId)
         {
             if(model != null)
