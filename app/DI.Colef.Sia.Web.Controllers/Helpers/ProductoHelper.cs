@@ -52,20 +52,6 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers.Helpers
                 actions += String.Format("<span>{0}</span>", html.ActionLink("Editar", "Edit", "Home",
                                                          new {id = producto.Id, tipoProducto = producto.TipoProducto},
                                                          null));
-                if (producto.Activo)
-                {
-                    actions += String.Format("<span>{0}</span>",
-                                             html.ActionLink("Desactivar", "Deactivate",  
-                                                             new { id = producto.Id },
-                                                             new { @class = "remote put" }));
-                }
-                else
-                {
-                    actions += String.Format("<span>{0}</span>",
-                                             html.ActionLink("Activar", "Activate",
-                                                             new { id = producto.Id },
-                                                             new {@class = "remote put"}));
-                }
             }
             else if (!isDGAA)
             {
@@ -74,6 +60,11 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers.Helpers
                     actions += String.Format("<span>{0}</span>",
                                          html.ActionLink("Editar", "Edit", "Home",
                                             new { id = producto.Id, tipoProducto = producto.TipoProducto }, null));
+
+                    if (producto.Activo)
+                    {
+                        actions += DeleteLink(html, producto.Id, producto.TipoProducto);
+                    }
 
                     actions += String.Format("<span>{0}</span>",
                                          html.ActionLink("Firmar", "Sign", "Home",
@@ -87,6 +78,13 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers.Helpers
                 }
             }
             return actions;
+        }
+
+        private static string DeleteLink(HtmlHelper html, int productoId, int productoTipo)
+        {
+            return String.Format("<span>{0}</span>", html.ActionLink("Borrar", "Deactivate", 
+                                                       new { id = productoId }, 
+                                                       new { @class = "button-delete" }));
         }
 
         public static string CollapsePanelClass(this HtmlHelper html, int elements)

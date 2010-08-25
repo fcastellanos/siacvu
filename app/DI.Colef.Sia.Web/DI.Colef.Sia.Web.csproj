@@ -213,6 +213,7 @@
     <Content Include="Views\Productos\ArticuloDifusion\Index.aspx" />
     <Content Include="Views\Productos\Articulo\Activate.js.ascx" />
     <Content Include="Views\Productos\Evento\_DatosFinal.ascx" />
+    <Content Include="Views\Shared\Deactivate.js.ascx" />
     <Content Include="Views\Shared\EditorialAddError.js.ascx" />
     <Content Include="Views\Usuario\ChangePais.js.ascx" />
     <Content Include="Views\Shared\HideEditorialForm.js.ascx" />

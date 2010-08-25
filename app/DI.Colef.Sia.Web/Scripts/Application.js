@@ -11,6 +11,7 @@ function setupDocument() {
     SubForm.setup();
     RemoteLinkV2.setup();
     Glosario.setup();
+    ConfirmDelete.setup();
 
     $('div.elementodescripcion:odd').addClass('elementolista-dos');
     setupSublistRows();
@@ -364,6 +365,21 @@ var DateTimePicker = {
         });
         $('input.datetime').each(function() {
             $(this).datepicker();
+        });
+    }
+};
+
+var ConfirmDelete = {
+    setup: function () {
+        $('.button-delete').live('click', function (e) {
+            e.preventDefault();
+            if (confirm('Estas seguro de eliminar este registro?')) {
+                $.ajax({
+                    url: this.href,
+                    type: 'post',
+                    dataType: 'script'
+                });
+            }
         });
     }
 };

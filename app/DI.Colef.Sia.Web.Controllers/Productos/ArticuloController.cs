@@ -478,26 +478,25 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers.Productos
             return Rjs("DeleteCoautorExterno", form);
         }
 
-        [Authorize(Roles = "DGAA")]
-        [CustomTransaction]
-        [AcceptVerbs(HttpVerbs.Put)]
-        public ActionResult Activate(int id)
-        {
-            var articulo = articuloService.GetArticuloById(id);
+        //[Authorize(Roles = "DGAA")]
+        //[CustomTransaction]
+        //[AcceptVerbs(HttpVerbs.Put)]
+        //public ActionResult Activate(int id)
+        //{
+        //    var articulo = articuloService.GetArticuloById(id);
 
-            articulo.Activo = true;
-            articulo.ModificadoPor = CurrentUser();
+        //    articulo.Activo = true;
+        //    articulo.ModificadoPor = CurrentUser();
 
-            articuloService.SaveArticulo(articulo);
+        //    articuloService.SaveArticulo(articulo);
 
-            var form = articuloMapper.Map(articulo);
+        //    var form = articuloMapper.Map(articulo);
 
-            return Rjs("Activate", form);
-        }
+        //    return Rjs("Activate", form);
+        //}
 
-        [Authorize(Roles = "DGAA")]
-        [CustomTransaction]
-        [AcceptVerbs(HttpVerbs.Put)]
+        [Authorize]
+        [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult Deactivate(int id)
         {
             var articulo = articuloService.GetArticuloById(id);
@@ -505,14 +504,11 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers.Productos
             articulo.Activo = false;
             articulo.ModificadoPor = CurrentUser();
 
-            articuloService.SaveArticulo(articulo);
+            //articuloService.SaveArticulo(articulo, true);
 
-            var form = articuloMapper.Map(articulo);
+            var articuloForm = articuloMapper.Map(articulo);
 
-            SetMessage(String.Format("Artículo en revistas de investigación {0} ha sido eliminado", articulo.Titulo));
-
-            return Rjs("Save", articulo.Id);
-            //return Rjs("Activate", form);
+            return Rjs("Deactivate", articuloForm);
         }
 
         ArticuloForm SetupNewForm()
