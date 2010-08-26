@@ -29,6 +29,11 @@ namespace DecisionesInteligentes.Colef.Sia.ApplicationServices
             return ((List<EstanciaInstitucionExterna>)estanciaInstitucionExternaRepository.FindAll(new Dictionary<string, object> { { "Activo", true } })).ToArray();
         }
 
+        public EstanciaInstitucionExterna[] GetActiveEstanciaInstitucionExternas(Usuario usuario)
+        {
+            return ((List<EstanciaInstitucionExterna>)estanciaInstitucionExternaRepository.FindAll(new Dictionary<string, object> { { "Activo", true }, { "Usuario", usuario } })).ToArray();
+        }
+
         public void SaveEstanciaInstitucionExterna(EstanciaInstitucionExterna estanciaInstitucionExterna)
         {
             if(estanciaInstitucionExterna.Id == 0)
@@ -39,6 +44,7 @@ namespace DecisionesInteligentes.Colef.Sia.ApplicationServices
             estanciaInstitucionExterna.ModificadoEl = DateTime.Now;
             
             estanciaInstitucionExternaRepository.SaveOrUpdate(estanciaInstitucionExterna);
+            estanciaInstitucionExternaRepository.DbContext.CommitChanges();
         }
 
 	    public EstanciaInstitucionExterna[] GetAllEstanciaInstitucionExternas(Usuario usuario)

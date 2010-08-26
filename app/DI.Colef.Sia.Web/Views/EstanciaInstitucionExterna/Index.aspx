@@ -56,7 +56,7 @@
 		    
         <% } else { %>
             <% foreach (var estanciaInstitucionExterna in Model.List){ %>
-                <div class="elementolista" id="accion_<%=Html.Encode(estanciaInstitucionExterna.Id) %>">
+                <div class="elementolista" id="accion_<%=Html.Encode(estanciaInstitucionExterna.Id) %>_0">
 			        <div class="elementodescripcion">
 			            <h5><span><%= (estanciaInstitucionExterna.InstitucionExists)?estanciaInstitucionExterna.Institucion.Nombre:Html.Encode(estanciaInstitucionExterna.InstitucionNombre)%></span></h5>
 				        <h6>Modificado el <%=Html.Encode(estanciaInstitucionExterna.Modificacion)%></h6>
@@ -65,7 +65,7 @@
 			        <div class="elementobotones">
 				        <p>
 				            <span><%=Html.ActionLink<EstanciaInstitucionExternaController>(x => x.Edit(estanciaInstitucionExterna.Id), "Editar")%></span> 
-				            <span><%=Html.ActionLink("Ver", "Show", new { id = estanciaInstitucionExterna.Id })%></span>
+				            <span><%=Html.ActionLink<EstanciaInstitucionExternaController>(x => x.Deactivate(estanciaInstitucionExterna.Id), "Borrar", new { @class = "button-delete" })%></span>
 				        </p>
 			        </div><!--end elementobotones-->	
     				

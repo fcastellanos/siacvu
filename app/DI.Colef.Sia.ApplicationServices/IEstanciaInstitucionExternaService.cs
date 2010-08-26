@@ -7,6 +7,7 @@ namespace DecisionesInteligentes.Colef.Sia.ApplicationServices
         EstanciaInstitucionExterna GetEstanciaInstitucionExternaById(int id);
         EstanciaInstitucionExterna[] GetAllEstanciaInstitucionExternas();
         EstanciaInstitucionExterna[] GetActiveEstanciaInstitucionExternas();
+        EstanciaInstitucionExterna[] GetActiveEstanciaInstitucionExternas(Usuario usuario);
         void SaveEstanciaInstitucionExterna(EstanciaInstitucionExterna estanciaInstitucionExterna);
 	    EstanciaInstitucionExterna[] GetAllEstanciaInstitucionExternas(Usuario usuario);
     }

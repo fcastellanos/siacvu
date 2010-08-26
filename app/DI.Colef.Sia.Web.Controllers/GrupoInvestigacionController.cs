@@ -51,9 +51,9 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers
             var grupoInvestigacions = new GrupoInvestigacion[] { };
 
             if (User.IsInRole("Investigadores"))
-                grupoInvestigacions = grupoInvestigacionService.GetAllGrupoInvestigacions(CurrentUser());
+                grupoInvestigacions = grupoInvestigacionService.GetActiveGrupoInvestigacions(CurrentUser());
             if (User.IsInRole("DGAA"))
-                grupoInvestigacions = grupoInvestigacionService.GetAllGrupoInvestigacions();
+                grupoInvestigacions = grupoInvestigacionService.GetActiveGrupoInvestigacions();
 			
             data.List = grupoInvestigacionMapper.Map(grupoInvestigacions);
 

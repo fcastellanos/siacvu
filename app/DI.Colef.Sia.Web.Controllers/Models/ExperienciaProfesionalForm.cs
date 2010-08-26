@@ -1,8 +1,7 @@
 namespace DecisionesInteligentes.Colef.Sia.Web.Controllers.Models
 {
-    public class ExperienciaProfesionalForm
+    public class ExperienciaProfesionalForm : BaseForm
     {
-        public int Id { get; set; }
         public int Entidad { get; set; }
         public string Nombramiento { get; set; }
         public string FechaInicial { get; set; }

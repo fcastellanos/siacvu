@@ -7,6 +7,7 @@ namespace DecisionesInteligentes.Colef.Sia.ApplicationServices
         GrupoInvestigacion GetGrupoInvestigacionById(int id);
         GrupoInvestigacion[] GetAllGrupoInvestigacions();
         GrupoInvestigacion[] GetActiveGrupoInvestigacions();
+	    GrupoInvestigacion[] GetActiveGrupoInvestigacions(Usuario usuario);
         void SaveGrupoInvestigacion(GrupoInvestigacion grupoInvestigacion);
 	    GrupoInvestigacion[] GetAllGrupoInvestigacions(Usuario usuario);
     }

@@ -29,7 +29,12 @@ namespace DecisionesInteligentes.Colef.Sia.ApplicationServices
             return ((List<GrupoInvestigacion>)grupoInvestigacionRepository.FindAll(new Dictionary<string, object> { { "Activo", true } })).ToArray();
         }
 
-        public void SaveGrupoInvestigacion(GrupoInvestigacion grupoInvestigacion)
+        public GrupoInvestigacion[] GetActiveGrupoInvestigacions(Usuario usuario)
+        {
+            return ((List<GrupoInvestigacion>)grupoInvestigacionRepository.FindAll(new Dictionary<string, object> { { "Activo", true }, { "Usuario", usuario } })).ToArray();
+        }
+
+	    public void SaveGrupoInvestigacion(GrupoInvestigacion grupoInvestigacion)
         {
             if(grupoInvestigacion.Id == 0)
             {
@@ -40,6 +45,7 @@ namespace DecisionesInteligentes.Colef.Sia.ApplicationServices
             grupoInvestigacion.ModificadoEl = DateTime.Now;
             
             grupoInvestigacionRepository.SaveOrUpdate(grupoInvestigacion);
+            grupoInvestigacionRepository.DbContext.CommitChanges();
         }
 
 	    public GrupoInvestigacion[] GetAllGrupoInvestigacions(Usuario usuario)

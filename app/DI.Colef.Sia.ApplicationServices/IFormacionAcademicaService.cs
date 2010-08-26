@@ -7,6 +7,7 @@ namespace DecisionesInteligentes.Colef.Sia.ApplicationServices
         FormacionAcademica GetFormacionAcademicaById(int id);
         FormacionAcademica[] GetAllFormacionAcademicas();
         FormacionAcademica[] GetActiveFormacionAcademicas();
+	    FormacionAcademica[] GetActiveFormacionAcademicas(Usuario usuario);
         void SaveFormacionAcademica(FormacionAcademica formacionAcademica);
 	    FormacionAcademica[] GetAllFormacionAcademicas(Usuario usuario);
     }

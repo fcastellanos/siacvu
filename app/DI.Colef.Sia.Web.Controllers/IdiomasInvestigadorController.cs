@@ -39,9 +39,9 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers
             var idiomasInvestigadors = new IdiomasInvestigador[] { };
 
             if (User.IsInRole("Investigadores"))
-                idiomasInvestigadors = idiomasInvestigadorService.GetAllIdiomasInvestigadores(CurrentUser());
+                idiomasInvestigadors = idiomasInvestigadorService.GetActiveIdiomasInvestigadores(CurrentUser());
             if (User.IsInRole("DGAA"))
-                idiomasInvestigadors = idiomasInvestigadorService.GetAllIdiomasInvestigadores();
+                idiomasInvestigadors = idiomasInvestigadorService.GetActiveIdiomasInvestigadores();
 
             data.List = idiomasInvestigadorMapper.Map(idiomasInvestigadors);
 
@@ -153,23 +153,39 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers
             return Rjs(form);
         }
 
-        [CustomTransaction]
+        //[CustomTransaction]
+        //[Authorize(Roles = "Investigadores")]
+        //[AcceptVerbs(HttpVerbs.Put)]
+        //public ActionResult Deactivate(int id)
+        //{
+        //    var idiomasInvestigador = idiomasInvestigadorService.GetIdiomasInvestigadorById(id);
+
+        //    if (idiomasInvestigador.Usuario.Id != CurrentUser().Id)
+        //        return RedirectToIndex("no lo puede modificar", true);
+
+        //    idiomasInvestigador.Activo = false;
+        //    idiomasInvestigador.ModificadoPor = CurrentUser();
+        //    idiomasInvestigadorService.SaveIdiomasInvestigador(idiomasInvestigador);
+
+        //    var form = idiomasInvestigadorMapper.Map(idiomasInvestigador);
+
+        //    return Rjs("Activate", form);
+        //}
+
         [Authorize(Roles = "Investigadores")]
-        [AcceptVerbs(HttpVerbs.Put)]
+        [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult Deactivate(int id)
         {
-            var idiomasInvestigador = idiomasInvestigadorService.GetIdiomasInvestigadorById(id);
+            var formacionAcademica = idiomasInvestigadorService.GetIdiomasInvestigadorById(id);
 
-            if (idiomasInvestigador.Usuario.Id != CurrentUser().Id)
-                return RedirectToIndex("no lo puede modificar", true);
+            formacionAcademica.Activo = false;
+            formacionAcademica.ModificadoPor = CurrentUser();
 
-            idiomasInvestigador.Activo = false;
-            idiomasInvestigador.ModificadoPor = CurrentUser();
-            idiomasInvestigadorService.SaveIdiomasInvestigador(idiomasInvestigador);
+            idiomasInvestigadorService.SaveIdiomasInvestigador(formacionAcademica);
 
-            var form = idiomasInvestigadorMapper.Map(idiomasInvestigador);
+            var idiomaInvestigadorForm = idiomasInvestigadorMapper.Map(formacionAcademica);
 
-            return Rjs("Activate", form);
+            return Rjs("Deactivate", idiomaInvestigadorForm);
         }
 
         [Authorize]

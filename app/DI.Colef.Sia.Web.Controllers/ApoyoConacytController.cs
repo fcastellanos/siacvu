@@ -38,9 +38,9 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers
             var apoyoConacyts = new ApoyoConacyt[] { };
 
             if (User.IsInRole("Investigadores"))
-                apoyoConacyts = apoyoConacytService.GetAllApoyosConacyt(CurrentUser());
+                apoyoConacyts = apoyoConacytService.GetActiveApoyosConacyt(CurrentUser());
             if (User.IsInRole("DGAA"))
-                apoyoConacyts = apoyoConacytService.GetAllApoyosConacyt();
+                apoyoConacyts = apoyoConacytService.GetActiveApoyosConacyt();
 
             data.List = apoyoConacytMapper.Map(apoyoConacyts);
 
@@ -135,42 +135,58 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers
             return RedirectToIndex(String.Format("Apoyo del Conacyt ({0}) ha sido modificado", apoyoConacyt.TipoApoyo.Nombre));
         }
 
-        [CustomTransaction]
+        //[CustomTransaction]
+        //[Authorize(Roles = "Investigadores")]
+        //[AcceptVerbs(HttpVerbs.Put)]
+        //public ActionResult Activate(int id)
+        //{
+        //    var apoyoConacyt = apoyoConacytService.GetApoyoConacytById(id);
+
+        //    if (apoyoConacyt.Usuario.Id != CurrentUser().Id)
+        //        return RedirectToIndex("no lo puede modificar", true);
+
+        //    apoyoConacyt.Activo = true;
+        //    apoyoConacyt.ModificadoPor = CurrentUser();
+        //    apoyoConacytService.SaveApoyoConacyt(apoyoConacyt);
+
+        //    var form = apoyoConacytMapper.Map(apoyoConacyt);
+
+        //    return Rjs(form);
+        //}
+
+        //[CustomTransaction]
+        //[Authorize(Roles = "Investigadores")]
+        //[AcceptVerbs(HttpVerbs.Put)]
+        //public ActionResult Deactivate(int id)
+        //{
+        //    var apoyoConacyt = apoyoConacytService.GetApoyoConacytById(id);
+
+        //    if (apoyoConacyt.Usuario.Id != CurrentUser().Id)
+        //        return RedirectToIndex("no lo puede modificar", true);
+
+        //    apoyoConacyt.Activo = false;
+        //    apoyoConacyt.ModificadoPor = CurrentUser();
+        //    apoyoConacytService.SaveApoyoConacyt(apoyoConacyt);
+
+        //    var form = apoyoConacytMapper.Map(apoyoConacyt);
+
+        //    return Rjs("Activate", form);
+        //}
+
         [Authorize(Roles = "Investigadores")]
-        [AcceptVerbs(HttpVerbs.Put)]
-        public ActionResult Activate(int id)
-        {
-            var apoyoConacyt = apoyoConacytService.GetApoyoConacytById(id);
-
-            if (apoyoConacyt.Usuario.Id != CurrentUser().Id)
-                return RedirectToIndex("no lo puede modificar", true);
-
-            apoyoConacyt.Activo = true;
-            apoyoConacyt.ModificadoPor = CurrentUser();
-            apoyoConacytService.SaveApoyoConacyt(apoyoConacyt);
-
-            var form = apoyoConacytMapper.Map(apoyoConacyt);
-
-            return Rjs(form);
-        }
-
-        [CustomTransaction]
-        [Authorize(Roles = "Investigadores")]
-        [AcceptVerbs(HttpVerbs.Put)]
+        [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult Deactivate(int id)
         {
             var apoyoConacyt = apoyoConacytService.GetApoyoConacytById(id);
 
-            if (apoyoConacyt.Usuario.Id != CurrentUser().Id)
-                return RedirectToIndex("no lo puede modificar", true);
-
             apoyoConacyt.Activo = false;
             apoyoConacyt.ModificadoPor = CurrentUser();
+
             apoyoConacytService.SaveApoyoConacyt(apoyoConacyt);
 
-            var form = apoyoConacytMapper.Map(apoyoConacyt);
+            var apoyoConacytForm = apoyoConacytMapper.Map(apoyoConacyt);
 
-            return Rjs("Activate", form);
+            return Rjs("Deactivate", apoyoConacytForm);
         }
 
         [Authorize]

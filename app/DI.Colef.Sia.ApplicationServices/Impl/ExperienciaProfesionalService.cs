@@ -29,7 +29,12 @@ namespace DecisionesInteligentes.Colef.Sia.ApplicationServices
             return ((List<ExperienciaProfesional>)experienciaProfesionalRepository.FindAll(new Dictionary<string, object> { { "Activo", true } })).ToArray();
         }
 
-        public void SaveExperienciaProfesional(ExperienciaProfesional experienciaProfesional)
+        public ExperienciaProfesional[] GetActiveExperienciasProfesionales(Usuario usuario)
+        {
+            return ((List<ExperienciaProfesional>)experienciaProfesionalRepository.FindAll(new Dictionary<string, object> { { "Activo", true }, { "Usuario", usuario } })).ToArray();
+        }
+
+	    public void SaveExperienciaProfesional(ExperienciaProfesional experienciaProfesional)
         {
             if(experienciaProfesional.Id == 0)
             {
@@ -39,6 +44,7 @@ namespace DecisionesInteligentes.Colef.Sia.ApplicationServices
             experienciaProfesional.ModificadoEl = DateTime.Now;
             
             experienciaProfesionalRepository.SaveOrUpdate(experienciaProfesional);
+            experienciaProfesionalRepository.DbContext.CommitChanges();
         }
 
 	    public ExperienciaProfesional[] GetAllExperienciasProfesionales(Usuario usuario)

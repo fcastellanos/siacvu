@@ -29,6 +29,11 @@ namespace DecisionesInteligentes.Colef.Sia.ApplicationServices
             return ((List<IdiomasInvestigador>)idiomasInvestigadorRepository.FindAll(new Dictionary<string, object> { { "Activo", true } })).ToArray();
         }
 
+        public IdiomasInvestigador[] GetActiveIdiomasInvestigadores(Usuario usuario)
+        {
+            return ((List<IdiomasInvestigador>)idiomasInvestigadorRepository.FindAll(new Dictionary<string, object> { { "Activo", true }, { "Usuario", usuario } })).ToArray();
+        }
+
         public void SaveIdiomasInvestigador(IdiomasInvestigador idiomasInvestigador)
         {
             if(idiomasInvestigador.Id == 0)
@@ -39,6 +44,7 @@ namespace DecisionesInteligentes.Colef.Sia.ApplicationServices
             idiomasInvestigador.ModificadoEl = DateTime.Now;
             
             idiomasInvestigadorRepository.SaveOrUpdate(idiomasInvestigador);
+            idiomasInvestigadorRepository.DbContext.CommitChanges();
         }
 
 	    public IdiomasInvestigador[] GetAllIdiomasInvestigadores(Usuario usuario)

@@ -40,9 +40,9 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers
             var estanciaInstitucionExternas = new EstanciaInstitucionExterna[] { };
 
             if (User.IsInRole("Investigadores"))
-                estanciaInstitucionExternas = estanciaInstitucionExternaService.GetAllEstanciaInstitucionExternas(CurrentUser());
+                estanciaInstitucionExternas = estanciaInstitucionExternaService.GetActiveEstanciaInstitucionExternas(CurrentUser());
             if (User.IsInRole("DGAA"))
-                estanciaInstitucionExternas = estanciaInstitucionExternaService.GetAllEstanciaInstitucionExternas();
+                estanciaInstitucionExternas = estanciaInstitucionExternaService.GetActiveEstanciaInstitucionExternas();
 
             data.List = estanciaInstitucionExternaMapper.Map(estanciaInstitucionExternas);
 

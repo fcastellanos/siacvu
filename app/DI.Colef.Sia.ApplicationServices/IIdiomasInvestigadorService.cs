@@ -7,6 +7,7 @@ namespace DecisionesInteligentes.Colef.Sia.ApplicationServices
         IdiomasInvestigador GetIdiomasInvestigadorById(int id);
         IdiomasInvestigador[] GetAllIdiomasInvestigadores();
         IdiomasInvestigador[] GetActiveIdiomasInvestigadores();
+        IdiomasInvestigador[] GetActiveIdiomasInvestigadores(Usuario usuario);
         void SaveIdiomasInvestigador(IdiomasInvestigador idiomasInvestigador);
 	    IdiomasInvestigador[] GetAllIdiomasInvestigadores(Usuario usuario);
     }

@@ -49,9 +49,9 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers
             var experienciaProfesionals = new ExperienciaProfesional[] { };
 
             if (User.IsInRole("Investigadores"))
-                experienciaProfesionals = experienciaProfesionalService.GetAllExperienciasProfesionales(CurrentUser());
+                experienciaProfesionals = experienciaProfesionalService.GetActiveExperienciasProfesionales(CurrentUser());
             if (User.IsInRole("DGAA"))
-                experienciaProfesionals = experienciaProfesionalService.GetAllExperienciasProfesionales();
+                experienciaProfesionals = experienciaProfesionalService.GetActiveExperienciasProfesionales();
 
             data.List = experienciaProfesionalMapper.Map(experienciaProfesionals);
 

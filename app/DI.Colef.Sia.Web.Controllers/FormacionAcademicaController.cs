@@ -55,9 +55,9 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers
             var formacionAcademicas = new FormacionAcademica[] { };
 
             if (User.IsInRole("Investigadores"))
-                formacionAcademicas = formacionAcademicaService.GetAllFormacionAcademicas(CurrentUser());
+                formacionAcademicas = formacionAcademicaService.GetActiveFormacionAcademicas(CurrentUser());
             if (User.IsInRole("DGAA"))
-                formacionAcademicas = formacionAcademicaService.GetAllFormacionAcademicas();
+                formacionAcademicas = formacionAcademicaService.GetActiveFormacionAcademicas();
 
             data.List = formacionAcademicaMapper.Map(formacionAcademicas);
 
@@ -185,7 +185,7 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers
             return Content(data);
         }
 
-        [Authorize]
+        [Authorize(Roles = "Investigadores")]
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult Deactivate(int id)
         {

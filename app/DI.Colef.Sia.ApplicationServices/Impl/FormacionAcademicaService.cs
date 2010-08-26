@@ -29,7 +29,12 @@ namespace DecisionesInteligentes.Colef.Sia.ApplicationServices
             return ((List<FormacionAcademica>)formacionAcademicaRepository.FindAll(new Dictionary<string, object> { { "Activo", true } })).ToArray();
         }
 
-        public void SaveFormacionAcademica(FormacionAcademica formacionAcademica)
+        public FormacionAcademica[] GetActiveFormacionAcademicas(Usuario usuario)
+        {
+            return ((List<FormacionAcademica>)formacionAcademicaRepository.FindAll(new Dictionary<string, object> { { "Activo", true }, { "Usuario", usuario } })).ToArray();
+        }
+
+	    public void SaveFormacionAcademica(FormacionAcademica formacionAcademica)
         {
             if(formacionAcademica.Id == 0)
             {
@@ -39,6 +44,7 @@ namespace DecisionesInteligentes.Colef.Sia.ApplicationServices
             formacionAcademica.ModificadoEl = DateTime.Now;
             
             formacionAcademicaRepository.SaveOrUpdate(formacionAcademica);
+            formacionAcademicaRepository.DbContext.CommitChanges();
         }
 
 	    public FormacionAcademica[] GetAllFormacionAcademicas(Usuario usuario)

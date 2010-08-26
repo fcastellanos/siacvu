@@ -29,6 +29,11 @@ namespace DecisionesInteligentes.Colef.Sia.ApplicationServices
             return ((List<ApoyoConacyt>)apoyoConacytRepository.FindAll(new Dictionary<string, object> { { "Activo", true } })).ToArray();
         }
 
+        public ApoyoConacyt[] GetActiveApoyosConacyt(Usuario usuario)
+        {
+            return ((List<ApoyoConacyt>)apoyoConacytRepository.FindAll(new Dictionary<string, object> { { "Activo", true }, { "Usuario", usuario } })).ToArray();
+        }
+
         public void SaveApoyoConacyt(ApoyoConacyt apoyoConacyt)
         {
             if(apoyoConacyt.Id == 0)
@@ -39,6 +44,7 @@ namespace DecisionesInteligentes.Colef.Sia.ApplicationServices
             apoyoConacyt.ModificadoEl = DateTime.Now;
             
             apoyoConacytRepository.SaveOrUpdate(apoyoConacyt);
+            apoyoConacytRepository.DbContext.CommitChanges();
         }
 
 	    public ApoyoConacyt[] GetAllApoyosConacyt(Usuario usuario)

@@ -52,7 +52,7 @@
 		    
         <% } else { %>
             <% foreach (var formacionAcademica in Model.List) { %>
-                <div class="elementolista" id="accion_<%=Html.Encode(formacionAcademica.Id) %>">
+                <div class="elementolista" id="accion_<%=Html.Encode(formacionAcademica.Id) %>_0">
 			        <div class="elementodescripcion">
 			            <h5><span><%=Html.Encode(formacionAcademica.TituloGrado)%></span></h5>
 				        <h6>Modificado el <%=Html.Encode(formacionAcademica.Modificacion)%></h6>
@@ -60,8 +60,8 @@
     				
 			        <div class="elementobotones">
 				        <p>
-				            <span><%=Html.ActionLink<FormacionAcademicaController>(x => x.Edit(formacionAcademica.Id), "Editar")%></span> 
-				            <span><%=Html.ActionLink("Ver", "Show", new { id = formacionAcademica.Id })%></span>
+				            <span><%=Html.ActionLink<FormacionAcademicaController>(x => x.Edit(formacionAcademica.Id), "Editar")%></span>
+                            <span><%=Html.ActionLink<FormacionAcademicaController>(x => x.Deactivate(formacionAcademica.Id), "Borrar", new { @class = "button-delete" })%></span>
 				        </p>
 			        </div><!--end elementobotones-->	
     				
