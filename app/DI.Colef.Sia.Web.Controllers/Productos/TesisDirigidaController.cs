@@ -339,6 +339,7 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers.Productos
                     tesisPosgradoMapper.Map(tesisPosgradoService.GetTesisPosgradoById(form.TesisPosgradoId));
 
             form.IsShowForm = false;
+            form.InstitucionLabel = "Institución";
 
             return form;
         }
