@@ -50,17 +50,17 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers.Models
 
         public CoautorExternoProductoForm[] CoautorExternoArticulos { get; set; }
         public CoautorInternoProductoForm[] CoautorInternoArticulos { get; set; }
-        public ArchivoForm[] ArchivosArticulo { get; set; }
+        public ArchivoForm[] ArchivosArticuloDifusion { get; set; }
 
         public override ArchivoForm[] Archivos
         {
-            get { return ArchivosArticulo; }
+            get { return ArchivosArticuloDifusion; }
         }
 
         /* New */
         public CoautorExternoProductoForm CoautorExternoProducto { get; set; }
         public CoautorInternoProductoForm CoautorInternoProducto { get; set; }
-        public ArchivoForm ArchivoArticulo { get; set; }
+        public ArchivoForm ArchivoArticuloDifusion { get; set; }
         public TipoArchivoForm[] TipoArchivos { get; set; }
 
         /* Show */

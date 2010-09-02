@@ -27,17 +27,17 @@ namespace DecisionesInteligentes.Colef.Sia.Core.NHibernateValidator
             var isValid = true;
             var estanciaAcademicaExterna = value as EstanciaAcademicaExterna;
 
-            if (!estanciaAcademicaExterna.IsTransient())
+            if (estanciaAcademicaExterna != null)
             {
-                isValid &= !ValidateIsNullOrEmpty<EstanciaAcademicaExterna>(estanciaAcademicaExterna, x => x.TipoEstancia, constraintValidatorContext);
-                isValid &= !ValidateIsNullOrEmpty<EstanciaAcademicaExterna>(estanciaAcademicaExterna, x => x.FechaInicial, constraintValidatorContext);
-                isValid &= !ValidateIsNullOrEmpty<EstanciaAcademicaExterna>(estanciaAcademicaExterna, x => x.FechaFinal, constraintValidatorContext);
+                if (!estanciaAcademicaExterna.IsTransient())
+                {
+                    isValid &= !ValidateIsNullOrEmpty<EstanciaAcademicaExterna>(estanciaAcademicaExterna, x => x.TipoEstancia, constraintValidatorContext);
+                    isValid &= !ValidateIsNullOrEmpty<EstanciaAcademicaExterna>(estanciaAcademicaExterna, x => x.FechaInicial, constraintValidatorContext);
+                    isValid &= !ValidateIsNullOrEmpty<EstanciaAcademicaExterna>(estanciaAcademicaExterna, x => x.FechaFinal, constraintValidatorContext);
+                }
+
+                isValid &= ValidateFechaInicialFinal(estanciaAcademicaExterna, constraintValidatorContext);
             }
-
-            //isValid &= !ValidateIsNullOrEmpty<EstanciaAcademicaExterna>(estanciaAcademicaExterna, x => x.Institucion, "InstitucionNombre",
-            //                                   constraintValidatorContext);
-
-            isValid &= ValidateFechaInicialFinal(estanciaAcademicaExterna, constraintValidatorContext);
 
             return isValid;
         }
