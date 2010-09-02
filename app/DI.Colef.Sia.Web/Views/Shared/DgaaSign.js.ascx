@@ -1,8 +1,7 @@
 ﻿<%@ Control Language="C#" AutoEventWireup="true" Inherits="System.Web.Mvc.ViewUserControl<FirmaForm>" %>
 <%@ Import Namespace="DecisionesInteligentes.Colef.Sia.Web.Controllers.Helpers"%>
-<%@ Import Namespace="DecisionesInteligentes.Colef.Sia.Web.Controllers"%>
-<%@ Import Namespace="DecisionesInteligentes.Colef.Sia.Web.Extensions"%>
 <%@ Import Namespace="DecisionesInteligentes.Colef.Sia.Web.Controllers.Models"%>
+<%@ Import Namespace="DecisionesInteligentes.Colef.Sia.Web.Controllers" %>
 
 var html = '
     <% if(Model.Aceptacion2 == 1){ %>
@@ -12,6 +11,8 @@ var html = '
         El <%=HumanizeHelper.GetNombreProducto(Model.TipoProducto) %> ha sido rechazado.
     <% } %>
 ';
+
+var submit = '<%= Html.ActionLink<HomeController>(x => x.Bandeja(), "Regresar", new {id = "regresar"}) %>';
 
 $('#firmaform').html('');
 
@@ -25,5 +26,8 @@ $('span.field-validation-error').remove();
 $('input').removeClass('input-validation-error');
 $('textarea').removeClass('input-validation-error');
 $('select').removeClass('input-validation-error');
+
+$('.submit').html('');
+$('.submit').html(submit);
 
 window.scrollTo(0,0);

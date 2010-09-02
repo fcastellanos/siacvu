@@ -250,7 +250,7 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers.Productos
             libro.Firma.Aceptacion2 = 1;
             libro.Firma.Usuario2 = CurrentUser();
 
-            libroService.SaveLibro(libro);
+            libroService.SaveLibro(libro, true);
 
             var data = new FirmaForm
                            {
