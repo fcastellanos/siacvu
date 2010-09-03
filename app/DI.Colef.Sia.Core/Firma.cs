@@ -9,19 +9,19 @@ namespace DecisionesInteligentes.Colef.Sia.Core
     {
 		public virtual int TipoProducto { get; set; }
 
-		public virtual DateTime Firma1 { get; set; }
+		public virtual DateTime? Firma1 { get; set; }
 
 		public virtual int Aceptacion1 { get; set; }
 
 		public virtual Usuario Usuario1 { get; set; }
 
-		public virtual DateTime Firma2 { get; set; }
+		public virtual DateTime? Firma2 { get; set; }
 
 		public virtual int Aceptacion2 { get; set; }
 
 		public virtual Usuario Usuario2 { get; set; }
 
-		public virtual DateTime Firma3 { get; set; }
+		public virtual DateTime? Firma3 { get; set; }
 
 		public virtual int Aceptacion3 { get; set; }
 

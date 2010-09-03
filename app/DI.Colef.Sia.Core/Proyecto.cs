@@ -126,15 +126,15 @@ namespace DecisionesInteligentes.Colef.Sia.Core
         public virtual Firma Firma { get; set; }
 
         //Seccion Calendario del proyecto
-        public virtual DateTime FechaInicial { get; set; }
+        public virtual DateTime? FechaInicial { get; set; }
 
-        public virtual DateTime FechaFinal { get; set; }
+        public virtual DateTime? FechaFinal { get; set; }
 
-        public virtual DateTime FechaProrroga { get; set; }
+        public virtual DateTime? FechaProrroga { get; set; }
 
         public virtual int EstadoProyecto { get; set; } //Catalogo Fijo
 
-        public virtual DateTime FechaConclusion { get; set; }
+        public virtual DateTime? FechaConclusion { get; set; }
 
         //Seccion fuentes del financiamiento del proyecto
         public virtual bool ConRecursos { get; set; }
