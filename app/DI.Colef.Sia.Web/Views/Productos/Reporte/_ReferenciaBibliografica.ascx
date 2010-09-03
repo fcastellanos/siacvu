@@ -17,14 +17,14 @@
     <span class="cvu"></span>
     <%=Html.ValidationMessage("Numero")%>
 </p>
-<p class="ReporteDocumento">
+<p class="ReporteTecnico">
 	<label class="ReporteTecnico">Descripci&oacute;n del informe</label>
 	<label class="DocumentoTrabajo">Descripci&oacute;n del cuaderno</label>
 	<%=Html.TextArea("Descripcion", Model.Descripcion, 3, 35, new { @class = "input420", maxlength = 200 })%>
 	<span class="cvu"></span>
 	<%=Html.ValidationMessage("Descripcion")%>
 </p>
-<p class="ReporteDocumento">
+<p class="ReporteTecnico">
 	<label class="ReporteTecnico">Objetivo del informe</label>
 	<label class="DocumentoTrabajo">Objetivo del cuaderno</label>
 	<%=Html.TextArea("Objetivo", Model.Objetivo, 3, 35, new { @class = "input420", maxlength = 200 })%>
