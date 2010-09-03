@@ -8,7 +8,7 @@
         <% for(int i = 0; i < Model.Archivos.Length; i++) { %>
 	        <div class="sublista" id="archivo_<%=Html.Encode(Model.Archivos[i].Id) %>">
 	            <h6>
-                    <%=Html.ActionLink(Html.Encode(Model.Archivos[i].Nombre), "Show", "Archivo", new { id = Model.Archivos[i].Id }, null) %>)%> -->
+                    <%=Html.ActionLink(Html.Encode(Model.Archivos[i].Nombre), "Show", "Archivo", new { id = Model.Archivos[i].Id }, null) %>
 	                <%=Html.Hidden("Archivo[" + i + "].Id", Model.Archivos[i].Id)%>
 	            </h6>
 			</div><!--end sublista-->
