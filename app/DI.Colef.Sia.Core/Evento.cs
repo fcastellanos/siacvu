@@ -104,6 +104,8 @@ namespace DecisionesInteligentes.Colef.Sia.Core
 
         public virtual int SesionesTrabajo { get; set; }
 
+        public virtual Ambito Ambito { get; set; }
+
         public virtual TipoParticipacion TipoParticipacion { get; set; }
 
         [Valid]

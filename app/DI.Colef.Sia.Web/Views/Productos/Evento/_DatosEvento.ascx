@@ -38,6 +38,14 @@
     <span class="cvu"></span>
     <%=Html.ValidationMessage("FechaInicial")%>
     <%=Html.ValidationMessage("FechaFinal")%>
-</p>    
+</p>
+
+<p>
+    <label>&Aacute;mbito</label>
+    <%=Html.DropDownList("Ambito", Model.Ambitos.CreateSelectList<AmbitoForm>("Id", "Nombre"),
+        "Seleccione ...", new { @class = "requerido" })%>
+    <span class="cvu"></span>
+    <%=Html.ValidationMessage("Ambito") %>
+</p>
 
 <% Html.RenderPartial("_EditInstitucion", Model ); %>

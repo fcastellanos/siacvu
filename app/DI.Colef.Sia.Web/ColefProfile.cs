@@ -444,6 +444,12 @@ namespace DecisionesInteligentes.Colef.Sia.Web
                            o => o.ResolveUsing<ModificadoResolver>())
                 .ForMember(d => d.TipoParticipacion,
                            o => o.Ignore())
+                .ForMember(d => d.Ambito,
+                           o => o.Ignore())
+                .ForMember(d => d.FechaInicial,
+                           o => o.AddFormatter<StandardDateFormatter>())
+                .ForMember(d => d.FechaFinal,
+                           o => o.AddFormatter<StandardDateFormatter>())
                 .ForMember(d => d.TipoEvento,
                            o => o.Ignore());
 

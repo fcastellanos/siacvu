@@ -641,6 +641,7 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers.Productos
             form = form ?? new EventoForm();
 
             form.LineasTematicas = lineaTematicaMapper.Map(catalogoService.GetActiveLineaTematicas());
+            form.Ambitos = ambitoMapper.Map(catalogoService.GetActiveAmbitos());
 
             form.TiposParticipaciones = tipoParticipacionMapper.Map(catalogoService.GetTipoParticipacionEventos());
             form.TiposEventos = tipoEventoMapper.Map(catalogoService.GetActiveTipoEventos());
@@ -673,6 +674,7 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers.Productos
 
             ViewData["LineaTematicaId"] = form.LineaTematicaId;
             ViewData["AreaTematicaId"] = form.AreaTematicaId;
+            ViewData["Ambito"] = form.AmbitoId;
         }
 
         EventoForm SetupShowForm(EventoForm form)

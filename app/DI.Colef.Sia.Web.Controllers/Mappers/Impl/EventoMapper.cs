@@ -68,6 +68,7 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers.Mappers
             model.TipoParticipacion = catalogoService.GetTipoParticipacionById(message.TipoParticipacion);
             model.AreaTematica = catalogoService.GetAreaTematicaById(message.AreaTematicaId);
             model.TipoEvento = catalogoService.GetTipoEventoById(message.TipoEvento);
+            model.Ambito = catalogoService.GetAmbitoById(message.Ambito);
         }
 
         public Evento Map(EventoForm message, Usuario usuario)
