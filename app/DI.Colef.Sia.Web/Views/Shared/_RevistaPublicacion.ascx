@@ -12,29 +12,34 @@
         <span class="field-alert">Esta revista no esta registrada en el cat&aacute;logo</span>
     <% } %>
 </p>
-<%if(!Model.RevistaPublicacionExists) { %>
-    <% if(!String.IsNullOrEmpty(Model.RevistaPublicacionInstitucionNombre)) { %>
+
+<div id="institucionrevista">
     <p>
         <label>Instituci&oacute;n</label>
         <span id="span_institucionrevista" class="valor"><%=Html.Encode(Model.RevistaPublicacionInstitucionNombre)%>&nbsp;</span>
     </p>
-    <% } %>
-    <% if(!String.IsNullOrEmpty(Model.RevistaPublicacionIndice1Nombre)) { %>
+</div>
+<div id="paisrevista">
+    <p>
+        <label>Pa&iacute;s</label>
+        <span id="span_paisrevista" class="valor"><%=Html.Encode(Model.RevistaPublicacionPaisNombre)%>&nbsp;</span>
+    </p>
+</div>
+<div id="indice1revista">
     <p>
         <label>Clasificaci&oacute;n 1</label>
         <span id="span_indice1revista" class="valor"><%=Html.Encode(Model.RevistaPublicacionIndice1Nombre)%>&nbsp;</span>
     </p>
-    <% } %>
-    <% if(!String.IsNullOrEmpty(Model.RevistaPublicacionIndice2Nombre)) { %>
+</div>
+<div id="indice2revista">
     <p>
         <label>Clasificaci&oacute;n 2</label>
         <span id="span_indice2revista" class="valor"><%=Html.Encode(Model.RevistaPublicacionIndice2Nombre)%>&nbsp;</span>
     </p>
-    <% } %>
-    <% if(!String.IsNullOrEmpty(Model.RevistaPublicacionIndice3Nombre)) { %>
+</div>
+<div id="indice3revista">
     <p>
         <label>Clasificaci&oacute;n 3</label>
         <span id="span_indice3revista" class="valor"><%=Html.Encode(Model.RevistaPublicacionIndice3Nombre)%>&nbsp;</span>
     </p>
-    <% } %>
-<% } %>
+</div>

@@ -290,7 +290,8 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers.Productos
                                RevistaPublicacionInstitucionNombre = revistaForm.InstitucionNombre,
                                RevistaPublicacionIndice1Nombre = revistaForm.Indice1Nombre,
                                RevistaPublicacionIndice2Nombre = revistaForm.Indice2Nombre,
-                               RevistaPublicacionIndice3Nombre = revistaForm.Indice3Nombre
+                               RevistaPublicacionIndice3Nombre = revistaForm.Indice3Nombre,
+                               RevistaPublicacionPaisNombre = revistaForm.PaisNombre
                            };
 
             return Rjs("ChangeRevista", form);
