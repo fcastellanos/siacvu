@@ -26,10 +26,21 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers.Mappers
         protected override void MapToModel(CoautorExternoProductoForm message, CoautorExternoLibro model)
         {
             model.InvestigadorExterno = catalogoService.GetInvestigadorExternoById(message.InvestigadorExternoId);
-            model.Institucion = catalogoService.GetInstitucionById(message.InstitucionId);
             model.CoautorSeOrdenaAlfabeticamente = message.CoautorSeOrdenaAlfabeticamente;
             model.Posicion = message.Posicion;
-			
+
+            var institucion = catalogoService.GetInstitucionById(message.InstitucionId);
+            if (institucion != null && string.Compare(institucion.Nombre, message.Institucion) >= 0)
+            {
+                model.Institucion = institucion;
+                model.InstitucionNombre = string.Empty;
+            }
+            else
+            {
+                model.InstitucionNombre = message.Institucion;
+                model.Institucion = null;
+            }
+
 			if (model.IsTransient())
             {
                 model.Activo = true;

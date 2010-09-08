@@ -45,6 +45,7 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers.Mappers
             var message = base.Map(model);
             message.TipoProducto = model.TipoProductoLibro;
             message.EditorialLibros = editorialLibroMapper.Map(model.EditorialLibros.Cast<EditorialProducto>().ToArray());
+            //message.CoautorExternoLibros = 
             if (model.AreaTematica != null)
                 message.LineaTematicaId = model.AreaTematica.LineaTematica.Id;
 

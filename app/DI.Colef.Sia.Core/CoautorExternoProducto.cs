@@ -13,6 +13,8 @@ namespace DecisionesInteligentes.Colef.Sia.Core
 
         public virtual Institucion Institucion { get; set; }
 
+        public virtual string InstitucionNombre { get; set; }
+
         public virtual int TipoProducto { get; set; }
 
         public virtual int Posicion { get; set; }

@@ -1,5 +1,3 @@
-using System;
-
 namespace DecisionesInteligentes.Colef.Sia.Web.Controllers.Models
 {
     public class CoautorExternoProductoForm
@@ -20,6 +18,7 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers.Models
 
         public int InstitucionId { get; set; }
         public string InstitucionNombre { get; set; }
+        public string Institucion { get; set; }
 
         public int ParentId { get; set; }
 

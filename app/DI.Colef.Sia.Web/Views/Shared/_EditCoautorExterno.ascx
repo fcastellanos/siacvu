@@ -10,10 +10,9 @@
 	                <%=Html.Encode(Model.CoautoresExternos[i].NombreCompleto)%>
 	                <%=Html.Hidden("CoautorExterno[" + i + "].InvestigadorExternoId", Model.CoautoresExternos[i].InvestigadorExternoId)%>
 	                <span>
-	                    <% if (Model.CoautoresExternos[i].InstitucionId != 0) {%>
-                            Instituci&oacute;n <%=Html.Encode(Model.CoautoresExternos[i].InstitucionNombre)%>
-                            <%=Html.Hidden("CoautorExterno[" + i + "].InstitucionId", Model.CoautoresExternos[i].InstitucionId)%>
-                        <% } %>
+                        Instituci&oacute;n : 
+                        <%=Html.Encode(Model.CoautoresExternos[i].InstitucionNombre)%>
+                        <%=Html.Hidden("CoautorExterno[" + i + "].InstitucionId", Model.CoautoresExternos[i].InstitucionId)%>
                         <% if(!Model.CoautorSeOrdenaAlfabeticamente){ %>
                             Posici&oacute;n <%=Html.Encode(Model.CoautoresExternos[i].Posicion)%>
                             <%=Html.Hidden("CoautorExterno[" + i + "].Posicion", Model.CoautoresExternos[i].Posicion)%>                 
