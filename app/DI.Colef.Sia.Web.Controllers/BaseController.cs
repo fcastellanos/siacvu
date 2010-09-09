@@ -69,71 +69,72 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers
         protected readonly IClaseMapper claseMapper;
         protected IAreaTematicaMapper areaTematicaMapper;
         protected IPaisMapper paisMapper;
+        protected IInvestigadorExternoMapper investigadorExternoMapper;
 
         public BaseController(IUsuarioService usuarioService, ISearchService searchService,
                               ICatalogoService catalogoService) :
-            this(usuarioService, searchService, catalogoService, null, null, null, null, null, null, null, null)
+            this(usuarioService, searchService, catalogoService, null, null, null, null, null, null, null, null, null)
         {
         }
 
         public BaseController(IUsuarioService usuarioService, ISearchService searchService,
                               ICatalogoService catalogoService, IInstitucionMapper institucionMapper, ISedeMapper sedeMapper) :
-            this(usuarioService, searchService, catalogoService, institucionMapper, sedeMapper, null, null, null, null, null, null)
+            this(usuarioService, searchService, catalogoService, institucionMapper, sedeMapper, null, null, null, null, null, null, null)
         {
         }
 
         public BaseController(IUsuarioService usuarioService, ISearchService searchService,
                               ICatalogoService catalogoService, IDisciplinaMapper disciplinaMapper, ISubdisciplinaMapper subdisciplinaMapper) :
-            this(usuarioService, searchService, catalogoService, null, null, disciplinaMapper, subdisciplinaMapper, null, null, null, null)
+            this(usuarioService, searchService, catalogoService, null, null, disciplinaMapper, subdisciplinaMapper, null, null, null, null, null)
         {
         }
 
         public BaseController(IUsuarioService usuarioService, ISearchService searchService,
                              ICatalogoService catalogoService, IDisciplinaMapper disciplinaMapper, ISubdisciplinaMapper subdisciplinaMapper,
                               IRamaMapper ramaMapper, IClaseMapper claseMapper) :
-            this(usuarioService, searchService, catalogoService, null, null, disciplinaMapper, subdisciplinaMapper, null, null, ramaMapper, claseMapper)
+            this(usuarioService, searchService, catalogoService, null, null, disciplinaMapper, subdisciplinaMapper, null, null, ramaMapper, claseMapper, null)
         {
         }
 
         public BaseController(IUsuarioService usuarioService, ISearchService searchService,
                               ICatalogoService catalogoService, IOrganizacionMapper organizacionMapper,
                               INivelMapper nivelMapper) :
-            this(usuarioService, searchService, catalogoService, null, null, null, null, organizacionMapper, nivelMapper, null, null)
+            this(usuarioService, searchService, catalogoService, null, null, null, null, organizacionMapper, nivelMapper, null, null, null)
         {
         }
 
         public BaseController(IUsuarioService usuarioService, ISearchService searchService,
                       ICatalogoService catalogoService, IInstitucionMapper institucionMapper, IOrganizacionMapper organizacionMapper,
                       INivelMapper nivelMapper) :
-            this(usuarioService, searchService, catalogoService, institucionMapper, null, null, null, organizacionMapper, nivelMapper, null, null)
+            this(usuarioService, searchService, catalogoService, institucionMapper, null, null, null, organizacionMapper, nivelMapper, null, null, null)
         {
         }
 
         public BaseController(IUsuarioService usuarioService, ISearchService searchService,
                               ICatalogoService catalogoService, IDisciplinaMapper disciplinaMapper, ISubdisciplinaMapper subdisciplinaMapper,
                               IOrganizacionMapper organizacionMapper, INivelMapper nivelMapper) :
-            this(usuarioService, searchService, catalogoService, null, null, disciplinaMapper, subdisciplinaMapper, organizacionMapper, nivelMapper, null, null)
+            this(usuarioService, searchService, catalogoService, null, null, disciplinaMapper, subdisciplinaMapper, organizacionMapper, nivelMapper, null, null, null)
         {
         }
 
         public BaseController(IUsuarioService usuarioService, ISearchService searchService,
                              ICatalogoService catalogoService, IInstitucionMapper institucionMapper, IDisciplinaMapper disciplinaMapper, ISubdisciplinaMapper subdisciplinaMapper,
                              IOrganizacionMapper organizacionMapper, INivelMapper nivelMapper) :
-            this(usuarioService, searchService, catalogoService, institucionMapper, null, disciplinaMapper, subdisciplinaMapper, organizacionMapper, nivelMapper, null, null)
+            this(usuarioService, searchService, catalogoService, institucionMapper, null, disciplinaMapper, subdisciplinaMapper, organizacionMapper, nivelMapper, null, null, null)
         {
         }
 
         public BaseController(IUsuarioService usuarioService, ISearchService searchService,
                              ICatalogoService catalogoService, IDisciplinaMapper disciplinaMapper, ISubdisciplinaMapper subdisciplinaMapper,
                              IOrganizacionMapper organizacionMapper, INivelMapper nivelMapper, IRamaMapper ramaMapper, IClaseMapper claseMapper) :
-            this(usuarioService, searchService, catalogoService, null, null, disciplinaMapper, subdisciplinaMapper, organizacionMapper, nivelMapper, ramaMapper, claseMapper)
+            this(usuarioService, searchService, catalogoService, null, null, disciplinaMapper, subdisciplinaMapper, organizacionMapper, nivelMapper, ramaMapper, claseMapper, null)
         {
         }
 
         public BaseController(IUsuarioService usuarioService, ISearchService searchService,
                               ICatalogoService catalogoService, IInstitucionMapper institucionMapper, ISedeMapper sedeMapper,
                               IDisciplinaMapper disciplinaMapper, ISubdisciplinaMapper subdisciplinaMapper, IOrganizacionMapper organizacionMapper,
-                              INivelMapper nivelMapper, IRamaMapper ramaMapper, IClaseMapper claseMapper)
+                              INivelMapper nivelMapper, IRamaMapper ramaMapper, IClaseMapper claseMapper, IInvestigadorExternoMapper investigadorExternoMapper)
         {
             this.usuarioService = usuarioService;
             this.searchService = searchService;
@@ -146,6 +147,7 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers
             this.nivelMapper = nivelMapper;
             this.ramaMapper = ramaMapper;
             this.claseMapper = claseMapper;
+            this.investigadorExternoMapper = investigadorExternoMapper;
         }
 
         [AcceptVerbs(HttpVerbs.Get)]
@@ -374,6 +376,98 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers
 
         [Authorize]
         [AcceptVerbs(HttpVerbs.Get)]
+        public ActionResult NewCoautorExterno(int id, bool esAlfabeticamente)
+        {
+            var model = GetModelById(id);
+
+            var form = new CoautorForm
+            {
+                Controller = "Libro",
+                IdName = "LibroId",
+                InvestigadorExterno = new InvestigadorExternoForm(),
+                CoautorSeOrdenaAlfabeticamente = esAlfabeticamente
+            };
+
+            if (model != null)
+                form.Id = model.Id;
+            
+            return Rjs("NewCoautorExterno", form);
+        }
+
+        [CustomTransaction]
+        [Authorize]
+        [AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult AddCoautorExterno([Bind(Prefix = "CoautorExterno")] CoautorExternoProductoForm form, int modelId)
+        {
+            var investigadorExternoForm = new InvestigadorExternoForm
+            {
+                Nombre = form.Nombre,
+                ApellidoPaterno = form.ApellidoPaterno,
+                ApellidoMaterno = form.ApellidoMaterno
+            };
+
+            var investigadorExterno = investigadorExternoMapper.Map(investigadorExternoForm);
+
+            ModelState.AddModelErrors(investigadorExterno.ValidationResults(), false, "CoautorExterno", String.Empty);
+            if (!ModelState.IsValid)
+            {
+                return Rjs("ModelError");
+            }
+
+            investigadorExterno.CreadoPor = CurrentUser();
+            investigadorExterno.ModificadoPor = CurrentUser();
+
+            catalogoService.SaveInvestigadorExterno(investigadorExterno);
+
+            form.InvestigadorExternoId = investigadorExterno.Id;
+            var coautorExternoProducto = MapCoautorExternoProductoMessage(form);
+
+            ModelState.AddModelErrors(coautorExternoProducto.ValidationResults(), false, "CoautorExterno", String.Empty);
+            if (!ModelState.IsValid)
+            {
+                return Rjs("ModelError");
+            }
+
+            var added = true;
+            if (modelId != 0)
+            {
+                coautorExternoProducto.CreadoPor = CurrentUser();
+                coautorExternoProducto.ModificadoPor = CurrentUser();
+
+                var model = GetModelById(modelId);
+                added = SaveCoautorExternoToModel(model, coautorExternoProducto);
+            }
+
+            if (!added && !ModelState.IsValid)
+            {
+                ViewData["Rollback"] = true;
+                return Rjs("CoautorExternoAddError");
+            }
+
+            var coautorExternoProductoForm = added
+                                                 ? MapCoautorExternoProductoModel(coautorExternoProducto, modelId)
+                                                 : new CoautorExternoProductoForm();
+
+            return Rjs(added ? "AddCoautorExterno" : "HideCoautorExternoForm", coautorExternoProductoForm);
+        }
+
+        [CustomTransaction]
+        [Authorize]
+        [AcceptVerbs(HttpVerbs.Delete)]
+        public ActionResult DeleteCoautorExterno(int id, int investigadorExternoId)
+        {
+            var model = GetModelById(id);
+
+            if (model != null)
+                DeleteCoautorExternoInModel(model, investigadorExternoId);
+
+            var form = new CoautorExternoProductoForm { InvestigadorExternoId = investigadorExternoId };
+
+            return Rjs("DeleteCoautorExterno", form);
+        }
+
+        [Authorize]
+        [AcceptVerbs(HttpVerbs.Get)]
         public ActionResult NewInstitucion(int id)
         {
             var model = GetModelById(id);
@@ -446,6 +540,16 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers
             throw new NotSupportedException();
         }
 
+        protected virtual void DeleteCoautorExternoInModel(TModel model, int coautorExternoId)
+        {
+            throw new NotSupportedException();
+        }
+
+        protected virtual bool SaveCoautorExternoToModel(TModel model, CoautorExternoProducto coautorExternoProducto)
+        {
+            throw new NotSupportedException();
+        }
+
         protected virtual void DeleteInstitucionInModel(TModel model, int institucionId)
         {
             throw new NotSupportedException();
@@ -462,6 +566,16 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers
         }
 
         protected virtual EditorialProducto MapEditorialMessage(EditorialProductoForm form)
+        {
+            throw new NotSupportedException();
+        }
+
+        protected virtual CoautorExternoProductoForm MapCoautorExternoProductoModel(CoautorExternoProducto model, int parentId)
+        {
+            throw new NotSupportedException();
+        }
+
+        protected virtual CoautorExternoProducto MapCoautorExternoProductoMessage(CoautorExternoProductoForm form)
         {
             throw new NotSupportedException();
         }

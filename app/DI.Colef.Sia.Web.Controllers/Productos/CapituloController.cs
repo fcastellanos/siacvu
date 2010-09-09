@@ -19,7 +19,7 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers.Productos
         readonly IAutorInternoCapituloMapper autorInternoCapituloMapper;
         readonly ICapituloMapper capituloMapper;
         readonly ICapituloService capituloService;
-        readonly ICoautorExternoCapituloMapper coautorExternoCapituloMapper;
+        readonly ICoautorExternoProductoMapper<CoautorExternoProducto> coautorExternoCapituloMapper;
         readonly ICoautorInternoCapituloMapper coautorInternoCapituloMapper;
         readonly ICustomCollection customCollection;
         readonly IEditorialProductoMapper<EditorialCapitulo> editorialCapituloMapper;
@@ -31,7 +31,7 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers.Productos
         public CapituloController(ICapituloService capituloService, ICapituloMapper capituloMapper,
                                   ICatalogoService catalogoService, IUsuarioService usuarioService,
                                   IArchivoService archivoService,
-                                  ICoautorExternoCapituloMapper coautorExternoCapituloMapper,
+                                  ICoautorExternoProductoMapper<CoautorExternoProducto> coautorExternoCapituloMapper,
                                   ICoautorInternoCapituloMapper coautorInternoCapituloMapper,
                                   IAutorExternoCapituloMapper autorExternoCapituloMapper,
                                   IAutorInternoCapituloMapper autorInternoCapituloMapper, ISearchService searchService,

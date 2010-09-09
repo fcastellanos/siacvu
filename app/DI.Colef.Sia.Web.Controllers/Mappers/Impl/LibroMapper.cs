@@ -12,7 +12,7 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers.Mappers
     {
 		readonly ICatalogoService catalogoService;
         readonly IEventoService eventoService;
-        readonly ICoautorExternoLibroMapper coautorExternoLibroMapper;
+        readonly ICoautorExternoProductoMapper<CoautorExternoProducto> coautorExternoLibroMapper;
         readonly ICoautorInternoLibroMapper coautorInternoLibroMapper;
         readonly IProyectoService proyectoService;
         readonly IEditorialProductoMapper<EditorialLibro> editorialLibroMapper;
@@ -20,7 +20,7 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers.Mappers
 		
         public LibroMapper(IRepository<Libro> repository,
 		    ICatalogoService catalogoService,
-            ICoautorExternoLibroMapper coautorExternoLibroMapper,
+            ICoautorExternoProductoMapper<CoautorExternoProducto> coautorExternoLibroMapper,
             ICoautorInternoLibroMapper coautorInternoLibroMapper,
             IEventoService eventoService,
             IProyectoService proyectoService,
@@ -45,7 +45,7 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers.Mappers
             var message = base.Map(model);
             message.TipoProducto = model.TipoProductoLibro;
             message.EditorialLibros = editorialLibroMapper.Map(model.EditorialLibros.Cast<EditorialProducto>().ToArray());
-            //message.CoautorExternoLibros = 
+            message.CoautorExternoLibros = coautorExternoLibroMapper.Map(model.CoautorExternoLibros.Cast<CoautorExternoProducto>().ToArray());
             if (model.AreaTematica != null)
                 message.LineaTematicaId = model.AreaTematica.LineaTematica.Id;
 

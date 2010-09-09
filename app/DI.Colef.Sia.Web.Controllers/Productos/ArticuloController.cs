@@ -43,7 +43,7 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers.Productos
                                   IInvestigadorService investigadorService,
                                   IProductoService productoService
             ) : base(usuarioService, searchService, catalogoService, null, null, disciplinaMapper, subdisciplinaMapper
-                     , null, null, null, null)
+                     , null, null, null, null, null)
         {
             this.coautorInternoArticuloMapper = coautorInternoArticuloMapper;
             this.articuloService = articuloService;

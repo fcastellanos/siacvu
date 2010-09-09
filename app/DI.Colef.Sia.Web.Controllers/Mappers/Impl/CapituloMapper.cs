@@ -11,7 +11,7 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers.Mappers
     public class CapituloMapper : AutoFormMapper<Capitulo, CapituloForm>, ICapituloMapper
     {
 		readonly ICatalogoService catalogoService;
-        readonly ICoautorExternoCapituloMapper coautorExternoCapituloMapper;
+        readonly ICoautorExternoProductoMapper<CoautorExternoProducto> coautorExternoCapituloMapper;
         readonly ICoautorInternoCapituloMapper coautorInternoCapituloMapper;
         readonly IAutorInternoCapituloMapper autorInternoCapituloMapper;
         readonly IAutorExternoCapituloMapper autorExternoCapituloMapper;
@@ -21,7 +21,7 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers.Mappers
 
 		public CapituloMapper(IRepository<Capitulo> repository,
 		                      ICatalogoService catalogoService,
-                              ICoautorExternoCapituloMapper coautorExternoCapituloMapper,
+                              ICoautorExternoProductoMapper<CoautorExternoProducto> coautorExternoCapituloMapper,
                               ICoautorInternoCapituloMapper coautorInternoCapituloMapper,
                               IAutorInternoCapituloMapper autorInternoCapituloMapper,
                               IAutorExternoCapituloMapper autorExternoCapituloMapper,
@@ -46,6 +46,7 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers.Mappers
         {
             var message = base.Map(model);
             message.EditorialCapitulos = editorialCapituloMapper.Map(model.EditorialCapitulos.Cast<EditorialProducto>().ToArray());
+            message.CoautorExternoCapitulos = coautorExternoCapituloMapper.Map(model.CoautorExternoCapitulos.Cast<CoautorExternoProducto>().ToArray());
             if (model.AreaTematica != null)
                 message.LineaTematicaId = model.AreaTematica.LineaTematica.Id;
 

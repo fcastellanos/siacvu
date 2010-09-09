@@ -16,7 +16,7 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers.Productos
     public class LibroController : BaseController<Libro, LibroForm>
     {
         readonly IAreaMapper areaMapper;
-        readonly ICoautorExternoLibroMapper coautorExternoLibroMapper;
+        readonly ICoautorExternoProductoMapper<CoautorExternoProducto> coautorExternoLibroMapper;
         readonly ICoautorInternoLibroMapper coautorInternoLibroMapper;
         readonly ICustomCollection customCollection;
         readonly IEditorialProductoMapper<EditorialLibro> editorialLibroMapper;
@@ -36,7 +36,7 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers.Productos
                                ICustomCollection customCollection, ILibroMapper libroMapper,
                                ICatalogoService catalogoService,
                                IUsuarioService usuarioService,
-                               ICoautorExternoLibroMapper coautorExternoLibroMapper,
+                               ICoautorExternoProductoMapper<CoautorExternoProducto> coautorExternoLibroMapper,
                                ICoautorInternoLibroMapper coautorInternoLibroMapper,
                                ISearchService searchService,
                                IRevistaPublicacionMapper revistaPublicacionMapper,
@@ -314,25 +314,6 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers.Productos
                            };
 
             return Rjs("ChangeRevista", form);
-        }
-
-        [Authorize]
-        [AcceptVerbs(HttpVerbs.Get)]
-        public ActionResult NewCoautorExterno(int id, bool esAlfabeticamente)
-        {
-            var libro = libroService.GetLibroById(id);
-            var form = new CoautorForm
-                           {
-                               Controller = "Libro",
-                               IdName = "LibroId",
-                               InvestigadorExterno = new InvestigadorExternoForm(),
-                               CoautorSeOrdenaAlfabeticamente = esAlfabeticamente
-                           };
-
-            if (libro != null)
-                form.Id = libro.Id;
-
-            return Rjs("NewCoautorExterno", form);
         }
 
         [CustomTransaction]
