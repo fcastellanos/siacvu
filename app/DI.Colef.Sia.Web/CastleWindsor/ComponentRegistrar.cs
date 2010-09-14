@@ -1,5 +1,4 @@
-﻿using System;
-using Castle.Windsor;
+﻿using Castle.Windsor;
 using DecisionesInteligentes.Colef.Sia.Web.Controllers.Mappers;
 using SharpArch.Core.PersistenceSupport.NHibernate;
 using SharpArch.Data.NHibernate;

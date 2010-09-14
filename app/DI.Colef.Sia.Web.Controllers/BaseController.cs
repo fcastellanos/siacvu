@@ -429,6 +429,7 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers
             }
 
             var added = true;
+
             if (modelId != 0)
             {
                 coautorExternoProducto.CreadoPor = CurrentUser();
@@ -461,7 +462,7 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers
             if (model != null)
                 DeleteCoautorExternoInModel(model, investigadorExternoId);
 
-            var form = new CoautorExternoProductoForm { InvestigadorExternoId = investigadorExternoId };
+            var form = new CoautorForm() { InvestigadorExternoId = investigadorExternoId };
 
             return Rjs("DeleteCoautorExterno", form);
         }

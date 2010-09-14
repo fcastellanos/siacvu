@@ -16,13 +16,12 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers.Productos
     public class LibroController : BaseController<Libro, LibroForm>
     {
         readonly IAreaMapper areaMapper;
-        readonly ICoautorExternoProductoMapper<CoautorExternoProducto> coautorExternoLibroMapper;
+        readonly ICoautorExternoProductoMapper<CoautorExternoLibro> coautorExternoLibroMapper;
         readonly ICoautorInternoLibroMapper coautorInternoLibroMapper;
         readonly ICustomCollection customCollection;
         readonly IEditorialProductoMapper<EditorialLibro> editorialLibroMapper;
         readonly IEventoMapper eventoMapper;
         readonly IEventoService eventoService;
-        readonly IInvestigadorExternoMapper investigadorExternoMapper;
         readonly IInvestigadorService investigadorService;
         readonly ILibroMapper libroMapper;
         readonly ILibroService libroService;
@@ -36,7 +35,7 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers.Productos
                                ICustomCollection customCollection, ILibroMapper libroMapper,
                                ICatalogoService catalogoService,
                                IUsuarioService usuarioService,
-                               ICoautorExternoProductoMapper<CoautorExternoProducto> coautorExternoLibroMapper,
+                               ICoautorExternoProductoMapper<CoautorExternoLibro> coautorExternoLibroMapper,
                                ICoautorInternoLibroMapper coautorInternoLibroMapper,
                                ISearchService searchService,
                                IRevistaPublicacionMapper revistaPublicacionMapper,
@@ -122,7 +121,7 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers.Productos
                 return RedirectToHomeIndex(verifyOwnershipMessage);
 
             CoautorInternoLibro coautorInternoLibro;
-            int posicionAutor;
+            int posicionAutor = 0;
             var coautorExists = 0;
 
             if (User.IsInRole("Investigadores"))
@@ -146,7 +145,7 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers.Productos
                     libro.CoautorInternoLibros.Where(x => x.Investigador.Id == CurrentInvestigador().Id).
                         FirstOrDefault();
 
-                posicionAutor = coautorInternoLibro.Posicion;
+                if (coautorInternoLibro != null) posicionAutor = coautorInternoLibro.Posicion;
             }
             else
                 posicionAutor = data.Form.PosicionCoautor;
@@ -314,86 +313,6 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers.Productos
                            };
 
             return Rjs("ChangeRevista", form);
-        }
-
-        [CustomTransaction]
-        [Authorize]
-        [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult AddCoautorExterno([Bind(Prefix = "CoautorExterno")] CoautorExternoProductoForm form,
-                                              int libroId)
-        {
-            var investigadorExternoForm = new InvestigadorExternoForm
-                                              {
-                                                  Nombre = form.Nombre,
-                                                  ApellidoPaterno = form.ApellidoPaterno,
-                                                  ApellidoMaterno = form.ApellidoMaterno
-                                              };
-
-            var investigadorExterno = investigadorExternoMapper.Map(investigadorExternoForm);
-
-            ModelState.AddModelErrors(investigadorExterno.ValidationResults(), false, "CoautorExterno", String.Empty);
-            if (!ModelState.IsValid)
-            {
-                return Rjs("ModelError");
-            }
-
-            investigadorExterno.CreadoPor = CurrentUser();
-            investigadorExterno.ModificadoPor = CurrentUser();
-
-            catalogoService.SaveInvestigadorExterno(investigadorExterno);
-
-            form.InvestigadorExternoId = investigadorExterno.Id;
-            var coautorExternoLibro = coautorExternoLibroMapper.Map(form);
-
-            ModelState.AddModelErrors(coautorExternoLibro.ValidationResults(), false, "CoautorExterno", String.Empty);
-            if (!ModelState.IsValid)
-            {
-                return Rjs("ModelError");
-            }
-
-            if (libroId != 0)
-            {
-                coautorExternoLibro.CreadoPor = CurrentUser();
-                coautorExternoLibro.ModificadoPor = CurrentUser();
-
-                var libro = libroService.GetLibroById(libroId);
-
-                var alreadyHasIt =
-                    libro.CoautorExternoLibros.Where(
-                        x => x.InvestigadorExterno.Id == coautorExternoLibro.InvestigadorExterno.Id).Count();
-
-                if (alreadyHasIt == 0)
-                {
-                    libro.AddCoautorExterno(coautorExternoLibro);
-                    libroService.SaveLibro(libro);
-                }
-            }
-
-            var coautorExternoLibroForm = coautorExternoLibroMapper.Map(coautorExternoLibro);
-            coautorExternoLibroForm.ParentId = libroId;
-
-            return Rjs("AddCoautorExterno", coautorExternoLibroForm);
-        }
-
-        [CustomTransaction]
-        [Authorize]
-        [AcceptVerbs(HttpVerbs.Delete)]
-        public ActionResult DeleteCoautorExterno(int id, int investigadorExternoId)
-        {
-            var libro = libroService.GetLibroById(id);
-
-            if (libro != null)
-            {
-                var coautor =
-                    libro.CoautorExternoLibros.Where(x => x.InvestigadorExterno.Id == investigadorExternoId).First();
-                libro.DeleteCoautorExterno(coautor);
-
-                libroService.SaveLibro(libro);
-            }
-
-            var form = new CoautorForm {ModelId = id, InvestigadorExternoId = investigadorExternoId};
-
-            return Rjs("DeleteCoautorExterno", form);
         }
 
         [Authorize]
@@ -584,6 +503,50 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers.Productos
             editorialLibroForm.ParentId = parentId;
 
             return editorialLibroForm;
+        }
+
+        protected override void DeleteCoautorExternoInModel(Libro model, int coautorExternoId)
+        {
+            if (model == null) return;
+            var coautor =
+                model.CoautorExternoLibros.Where(x => x.InvestigadorExterno.Id == coautorExternoId).First();
+            model.DeleteCoautorExterno(coautor);
+
+            libroService.SaveLibro(model, true);
+        }
+
+        protected override bool SaveCoautorExternoToModel(Libro model, CoautorExternoProducto coautorExternoProducto)
+        {
+            ModelState.AddModelErrors(model.ValidationResults(), true, "Libro");
+            if (!ModelState.IsValid)
+            {
+                return false;
+            }
+
+            var alreadyHasIt =
+                model.CoautorExternoLibros.Where(
+                    x => x.InvestigadorExterno.Id == coautorExternoProducto.InvestigadorExterno.Id).Count();
+
+            if (alreadyHasIt == 0)
+            {
+                model.AddCoautorExterno(coautorExternoProducto);
+                libroService.SaveLibro(model);
+            }
+
+            return alreadyHasIt == 0;
+        }
+
+        protected override CoautorExternoProducto MapCoautorExternoProductoMessage(CoautorExternoProductoForm form)
+        {
+            return coautorExternoLibroMapper.Map(form);
+        }
+
+        protected override CoautorExternoProductoForm MapCoautorExternoProductoModel(CoautorExternoProducto model, int parentId)
+        {
+            var coautorExternoLibroform = coautorExternoLibroMapper.Map(model as CoautorExternoLibro);
+            coautorExternoLibroform.ParentId = parentId;
+
+            return coautorExternoLibroform;
         }
 
         protected override Libro GetModelById(int id)
