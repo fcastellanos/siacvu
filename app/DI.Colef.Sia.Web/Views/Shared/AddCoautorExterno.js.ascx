@@ -1,6 +1,4 @@
 ﻿<%@ Control Language="C#" AutoEventWireup="true" Inherits="System.Web.Mvc.ViewUserControl<CoautorExternoProductoForm>" %>
-<%@ Import Namespace="DecisionesInteligentes.Colef.Sia.Web.Controllers"%>
-<%@ Import Namespace="DecisionesInteligentes.Colef.Sia.Web.Extensions"%>
 <%@ Import Namespace="DecisionesInteligentes.Colef.Sia.Web.Controllers.Models"%>
 
 var counter = $('#coautorexternoList div[id^=coautorexterno_]').length;
@@ -12,15 +10,13 @@ var html = '
             <%=Html.Encode(Model.NombreCompleto)%>
             <%=Html.Hidden("CoautorExterno['  + counter + '].InvestigadorExternoId", Model.InvestigadorExternoId)%>
             <span>
-                <% if (Model.InstitucionId != 0) {%>
-                    Instituci&oacute;n <%=Html.Encode(Model.InstitucionNombre)%>
-                    <%=Html.Hidden("CoautorExterno[' + counter + '].InstitucionId", Model.InstitucionId)%>
-                <% } %>
+                    Instituci&oacute;n : <%=Html.Encode(Model.InstitucionNombre) %>
+                    <%=Html.Hidden("CoautorExterno[' + counter + '].InstitucionId", Model.InstitucionId) %>
                 <% if(!Model.CoautorSeOrdenaAlfabeticamente){ %>
                     Posici&oacute;n <%=Html.Encode(Model.Posicion) %>
-                    <%=Html.Hidden("CoautorExterno[' + counter + '].Posicion", Model.Posicion)%>
+                    <%=Html.Hidden("CoautorExterno[' + counter + '].Posicion", Model.Posicion) %>
                 <% } %>
-                <%=Html.Hidden("CoautorExterno[' + counter + '].CoautorSeOrdenaAlfabeticamente", Model.CoautorSeOrdenaAlfabeticamente)%>
+                <%=Html.Hidden("CoautorExterno[' + counter + '].CoautorSeOrdenaAlfabeticamente", Model.CoautorSeOrdenaAlfabeticamente) %>
             </span>
         </h6>
 	</div><!--end sublista-->

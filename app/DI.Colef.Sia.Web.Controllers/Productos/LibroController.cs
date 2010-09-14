@@ -546,6 +546,9 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers.Productos
             var coautorExternoLibroform = coautorExternoLibroMapper.Map(model as CoautorExternoLibro);
             coautorExternoLibroform.ParentId = parentId;
 
+            if (model.Institucion != null)
+                coautorExternoLibroform.InstitucionNombre = model.Institucion.Nombre;
+
             return coautorExternoLibroform;
         }
 

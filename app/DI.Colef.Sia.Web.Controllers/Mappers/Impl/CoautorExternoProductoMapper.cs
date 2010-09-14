@@ -32,7 +32,7 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers.Mappers
 
         public override CoautorExternoProducto Map(CoautorExternoProductoForm message)
         {
-            TModel model = repository.Get(GetIdFromMessage(message)) ?? new TModel();
+            var model = repository.Get(GetIdFromMessage(message)) ?? new TModel();
             MapToModel(message, model as CoautorExternoProducto);
             return model as CoautorExternoProducto;
         }
@@ -67,7 +67,8 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers.Mappers
         public new CoautorExternoProductoForm[] Map(CoautorExternoProducto[] model)
         {
             var messages = Map<CoautorExternoProducto[], CoautorExternoProductoForm[]>(model);
-            for (int i = 0; i < model.Length; i++)
+
+            for (var i = 0; i < model.Length; i++)
             {
                 if (messages[i].InstitucionId > 0)
                     messages[i].InstitucionNombre = model[i].Institucion.Nombre;

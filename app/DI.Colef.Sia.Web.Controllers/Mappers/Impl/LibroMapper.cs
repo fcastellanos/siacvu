@@ -43,9 +43,11 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers.Mappers
         public override LibroForm Map(Libro model)
         {
             var message = base.Map(model);
+
             message.TipoProducto = model.TipoProductoLibro;
             message.EditorialLibros = editorialLibroMapper.Map(model.EditorialLibros.Cast<EditorialProducto>().ToArray());
             message.CoautorExternoLibros = coautorExternoLibroMapper.Map(model.CoautorExternoLibros.Cast<CoautorExternoProducto>().ToArray());
+
             if (model.AreaTematica != null)
                 message.LineaTematicaId = model.AreaTematica.LineaTematica.Id;
 
