@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using DecisionesInteligentes.Colef.Sia.ApplicationServices;
 using DecisionesInteligentes.Colef.Sia.Core;
 using DecisionesInteligentes.Colef.Sia.Web.Controllers.Models;
@@ -10,13 +11,13 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers.Mappers
     public class ArticuloDifusionMapper: AutoFormMapper<ArticuloDifusion, ArticuloDifusionForm>, IArticuloDifusionMapper
     {
         readonly ICatalogoService catalogoService;
-        readonly ICoautorExternoArticuloMapper coautorExternoArticuloMapper;
+        readonly ICoautorExternoProductoMapper<CoautorExternoProducto> coautorExternoArticuloMapper;
         readonly ICoautorInternoArticuloMapper coautorInternoArticuloMapper;
         readonly IProyectoService proyectoService;
         private Usuario usuarioArticulo;
 
         public ArticuloDifusionMapper(IRepository<ArticuloDifusion> repository,
-                              ICoautorExternoArticuloMapper coautorExternoArticuloMapper,
+                              ICoautorExternoProductoMapper<CoautorExternoProducto> coautorExternoArticuloMapper,
                               ICoautorInternoArticuloMapper coautorInternoArticuloMapper,
                               ICatalogoService catalogoService, IProyectoService proyectoService
         )
@@ -38,6 +39,9 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers.Mappers
             var message = base.Map(model);
             if (message.RevistaPublicacionId > 0)
                 message.RevistaPublicacionTitulo = model.RevistaPublicacion.Titulo;
+
+            message.CoautorExternoArticulos =
+                coautorExternoArticuloMapper.Map(model.CoautorExternoArticulos.Cast<CoautorExternoProducto>().ToArray());
 
             return message;
         }

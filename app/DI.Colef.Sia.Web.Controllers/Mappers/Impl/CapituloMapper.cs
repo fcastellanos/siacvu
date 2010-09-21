@@ -45,8 +45,10 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers.Mappers
         public override CapituloForm Map(Capitulo model)
         {
             var message = base.Map(model);
+
             message.EditorialCapitulos = editorialCapituloMapper.Map(model.EditorialCapitulos.Cast<EditorialProducto>().ToArray());
             message.CoautorExternoCapitulos = coautorExternoCapituloMapper.Map(model.CoautorExternoCapitulos.Cast<CoautorExternoProducto>().ToArray());
+
             if (model.AreaTematica != null)
                 message.LineaTematicaId = model.AreaTematica.LineaTematica.Id;
 

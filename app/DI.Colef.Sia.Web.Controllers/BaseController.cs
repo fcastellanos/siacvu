@@ -382,8 +382,6 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers
 
             var form = new CoautorForm
             {
-                Controller = "Libro",
-                IdName = "LibroId",
                 InvestigadorExterno = new InvestigadorExternoForm(),
                 CoautorSeOrdenaAlfabeticamente = esAlfabeticamente
             };
@@ -462,7 +460,7 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers
             if (model != null)
                 DeleteCoautorExternoInModel(model, investigadorExternoId);
 
-            var form = new CoautorForm() { InvestigadorExternoId = investigadorExternoId };
+            var form = new CoautorForm { InvestigadorExternoId = investigadorExternoId };
 
             return Rjs("DeleteCoautorExterno", form);
         }

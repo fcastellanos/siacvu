@@ -11,7 +11,7 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers.Mappers
     public class ResenaMapper : AutoFormMapper<Resena, ResenaForm>, IResenaMapper
     {
         readonly ICatalogoService catalogoService;
-        readonly ICoautorExternoResenaMapper coautorExternoResenaMapper;
+        readonly ICoautorExternoProductoMapper<CoautorExternoProducto> coautorExternoResenaMapper;
         readonly ICoautorInternoResenaMapper coautorInternoResenaMapper;
         readonly IAutorInternoResenaMapper autorInternoResenaMapper;
         readonly IAutorExternoResenaMapper autorExternoResenaMapper;
@@ -20,7 +20,7 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers.Mappers
         
         public ResenaMapper(IRepository<Resena> repository,
                             ICatalogoService catalogoService, 
-                            ICoautorExternoResenaMapper coautorExternoResenaMapper, 
+                            ICoautorExternoProductoMapper<CoautorExternoProducto> coautorExternoResenaMapper, 
                             ICoautorInternoResenaMapper coautorInternoResenaMapper,
                             IAutorInternoResenaMapper autorInternoResenaMapper,
                             IAutorExternoResenaMapper autorExternoResenaMapper,
@@ -46,6 +46,7 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers.Mappers
             if (message.RevistaPublicacionId > 0)
                 message.RevistaPublicacionTitulo = model.RevistaPublicacion.Titulo;
             message.EditorialResenas = editorialResenaMapper.Map(model.EditorialResenas.Cast<EditorialProducto>().ToArray());
+            message.CoautorExternoResenas = coautorExternoResenaMapper.Map(model.CoautorExternoResenas.Cast<CoautorExternoProducto>().ToArray());
 
             return message;
         }

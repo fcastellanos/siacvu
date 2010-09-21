@@ -19,11 +19,10 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers.Productos
         readonly IAutorInternoCapituloMapper autorInternoCapituloMapper;
         readonly ICapituloMapper capituloMapper;
         readonly ICapituloService capituloService;
-        readonly ICoautorExternoProductoMapper<CoautorExternoProducto> coautorExternoCapituloMapper;
+        readonly ICoautorExternoProductoMapper<CoautorExternoCapitulo> coautorExternoCapituloMapper;
         readonly ICoautorInternoCapituloMapper coautorInternoCapituloMapper;
         readonly ICustomCollection customCollection;
         readonly IEditorialProductoMapper<EditorialCapitulo> editorialCapituloMapper;
-        readonly IInvestigadorExternoMapper investigadorExternoMapper;
         readonly IInvestigadorService investigadorService;
         readonly ILineaTematicaMapper lineaTematicaMapper;
         readonly IProductoService productoService;
@@ -31,7 +30,7 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers.Productos
         public CapituloController(ICapituloService capituloService, ICapituloMapper capituloMapper,
                                   ICatalogoService catalogoService, IUsuarioService usuarioService,
                                   IArchivoService archivoService,
-                                  ICoautorExternoProductoMapper<CoautorExternoProducto> coautorExternoCapituloMapper,
+                                  ICoautorExternoProductoMapper<CoautorExternoCapitulo> coautorExternoCapituloMapper,
                                   ICoautorInternoCapituloMapper coautorInternoCapituloMapper,
                                   IAutorExternoCapituloMapper autorExternoCapituloMapper,
                                   IAutorInternoCapituloMapper autorInternoCapituloMapper, ISearchService searchService,
@@ -104,9 +103,9 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers.Productos
 
             CoautorInternoCapitulo coautorInternoCapitulo;
             AutorInternoCapitulo autorInternoCapitulo;
-            int posicionCoautor;
+            var posicionCoautor = 0;
             var coautorExists = 0;
-            int posicionAutor;
+            var posicionAutor = 0;
             var autorExists = 0;
 
             if (User.IsInRole("Investigadores"))
@@ -136,7 +135,7 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers.Productos
                     capitulo.CoautorInternoCapitulos.Where(x => x.Investigador.Id == CurrentInvestigador().Id).
                         FirstOrDefault();
 
-                posicionCoautor = coautorInternoCapitulo.Posicion;
+                if (coautorInternoCapitulo != null) posicionCoautor = coautorInternoCapitulo.Posicion;
             }
             else
                 posicionCoautor = data.Form.PosicionCoautor;
@@ -147,7 +146,7 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers.Productos
                     capitulo.AutorInternoCapitulos.Where(x => x.Investigador.Id == CurrentInvestigador().Id).
                         FirstOrDefault();
 
-                posicionAutor = autorInternoCapitulo.Posicion;
+                if (autorInternoCapitulo != null) posicionAutor = autorInternoCapitulo.Posicion;
             }
             else
                 posicionAutor = data.Form.PosicionAutor;
@@ -403,106 +402,6 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers.Productos
             var form = new CoautorForm {ModelId = id, InvestigadorId = investigadorId};
 
             return Rjs("DeleteCoautorInterno", form);
-        }
-
-        [Authorize]
-        [AcceptVerbs(HttpVerbs.Get)]
-        public ActionResult NewCoautorExterno(int id, bool esAlfabeticamente)
-        {
-            var capitulo = capituloService.GetCapituloById(id);
-            var form = new CoautorForm
-                           {
-                               Controller = "Capitulo",
-                               IdName = "CapituloId",
-                               InvestigadorExterno = new InvestigadorExternoForm(),
-                               CoautorSeOrdenaAlfabeticamente = esAlfabeticamente
-                           };
-
-            if (capitulo != null)
-                form.Id = capitulo.Id;
-
-            return Rjs("NewCoautorExterno", form);
-        }
-
-        [CustomTransaction]
-        [Authorize]
-        [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult AddCoautorExterno([Bind(Prefix = "CoautorExterno")] CoautorExternoProductoForm form,
-                                              int capituloId)
-        {
-            var investigadorExternoForm = new InvestigadorExternoForm
-                                              {
-                                                  Nombre = form.Nombre,
-                                                  ApellidoPaterno = form.ApellidoPaterno,
-                                                  ApellidoMaterno = form.ApellidoMaterno
-                                              };
-
-            var investigadorExterno = investigadorExternoMapper.Map(investigadorExternoForm);
-
-            ModelState.AddModelErrors(investigadorExterno.ValidationResults(), false, "CoautorExterno", String.Empty);
-            if (!ModelState.IsValid)
-            {
-                return Rjs("ModelError");
-            }
-
-            investigadorExterno.CreadoPor = CurrentUser();
-            investigadorExterno.ModificadoPor = CurrentUser();
-
-            catalogoService.SaveInvestigadorExterno(investigadorExterno);
-
-            form.InvestigadorExternoId = investigadorExterno.Id;
-            var coautorExternoCapitulo = coautorExternoCapituloMapper.Map(form);
-
-            ModelState.AddModelErrors(coautorExternoCapitulo.ValidationResults(), false, "CoautorExterno", String.Empty);
-            if (!ModelState.IsValid)
-            {
-                return Rjs("ModelError");
-            }
-
-            if (capituloId != 0)
-            {
-                coautorExternoCapitulo.CreadoPor = CurrentUser();
-                coautorExternoCapitulo.ModificadoPor = CurrentUser();
-
-                var capitulo = capituloService.GetCapituloById(capituloId);
-
-                var alreadyHasIt =
-                    capitulo.CoautorExternoCapitulos.Where(
-                        x => x.InvestigadorExterno.Id == coautorExternoCapitulo.InvestigadorExterno.Id).Count();
-
-                if (alreadyHasIt == 0)
-                {
-                    capitulo.AddCoautorExterno(coautorExternoCapitulo);
-                    capituloService.SaveCapitulo(capitulo);
-                }
-            }
-
-            var coautorExternoCapituloForm = coautorExternoCapituloMapper.Map(coautorExternoCapitulo);
-            coautorExternoCapituloForm.ParentId = capituloId;
-
-            return Rjs("AddCoautorExterno", coautorExternoCapituloForm);
-        }
-
-        [CustomTransaction]
-        [Authorize]
-        [AcceptVerbs(HttpVerbs.Delete)]
-        public ActionResult DeleteCoautorExterno(int id, int investigadorExternoId)
-        {
-            var capitulo = capituloService.GetCapituloById(id);
-
-            if (capitulo != null)
-            {
-                var coautor =
-                    capitulo.CoautorExternoCapitulos.Where(x => x.InvestigadorExterno.Id == investigadorExternoId).First
-                        ();
-                capitulo.DeleteCoautorExterno(coautor);
-
-                capituloService.SaveCapitulo(capitulo);
-            }
-
-            var form = new CoautorForm {ModelId = id, InvestigadorExternoId = investigadorExternoId};
-
-            return Rjs("DeleteCoautorExterno", form);
         }
 
         [Authorize]
@@ -815,6 +714,53 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers.Productos
             editorialCapituloForm.ParentId = parentId;
 
             return editorialCapituloForm;
+        }
+
+        protected override void DeleteCoautorExternoInModel(Capitulo model, int coautorExternoId)
+        {
+            if (model == null) return;
+            var coautor =
+                model.CoautorExternoCapitulos.Where(x => x.InvestigadorExterno.Id == coautorExternoId).First();
+            model.DeleteCoautorExterno(coautor);
+
+            capituloService.SaveCapitulo(model, true);
+        }
+
+        protected override bool SaveCoautorExternoToModel(Capitulo model, CoautorExternoProducto coautorExternoProducto)
+        {
+            ModelState.AddModelErrors(model.ValidationResults(), true, "Capitulo");
+            if (!ModelState.IsValid)
+            {
+                return false;
+            }
+
+            var alreadyHasIt =
+                model.CoautorExternoCapitulos.Where(
+                    x => x.InvestigadorExterno.Id == coautorExternoProducto.InvestigadorExterno.Id).Count();
+
+            if (alreadyHasIt == 0)
+            {
+                model.AddCoautorExterno(coautorExternoProducto);
+                capituloService.SaveCapitulo(model);
+            }
+
+            return alreadyHasIt == 0;
+        }
+
+        protected override CoautorExternoProducto MapCoautorExternoProductoMessage(CoautorExternoProductoForm form)
+        {
+            return coautorExternoCapituloMapper.Map(form);
+        }
+
+        protected override CoautorExternoProductoForm MapCoautorExternoProductoModel(CoautorExternoProducto model, int parentId)
+        {
+            var coautorExternoCapituloform = coautorExternoCapituloMapper.Map(model as CoautorExternoLibro);
+            coautorExternoCapituloform.ParentId = parentId;
+
+            if (model.Institucion != null)
+                coautorExternoCapituloform.InstitucionNombre = model.Institucion.Nombre;
+
+            return coautorExternoCapituloform;
         }
 
         protected override Capitulo GetModelById(int id)

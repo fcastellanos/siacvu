@@ -11,7 +11,7 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers.Mappers
     public class ObraTraducidaMapper : AutoFormMapper<ObraTraducida, ObraTraducidaForm>, IObraTraducidaMapper
     {
 		readonly ICatalogoService catalogoService;
-        readonly ICoautorExternoObraTraducidaMapper coautorExternoObraTraducidaMapper;
+        readonly ICoautorExternoProductoMapper<CoautorExternoProducto> coautorExternoObraTraducidaMapper;
         readonly ICoautorInternoObraTraducidaMapper coautorInternoObraTraducidaMapper;
         readonly IAutorInternoObraTraducidaMapper autorInternoObraTraducidaMapper;
         readonly IAutorExternoObraTraducidaMapper autorExternoObraTraducidaMapper;
@@ -19,7 +19,7 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers.Mappers
         private Usuario usuarioObraTraducida;
 
 		public ObraTraducidaMapper(IRepository<ObraTraducida> repository,
-            ICoautorExternoObraTraducidaMapper coautorExternoObraTraducidaMapper,
+            ICoautorExternoProductoMapper<CoautorExternoProducto> coautorExternoObraTraducidaMapper,
             ICoautorInternoObraTraducidaMapper coautorInternoObraTraducidaMapper,
             IAutorInternoObraTraducidaMapper autorInternoObraTraducidaMapper,
             IAutorExternoObraTraducidaMapper autorExternoObraTraducidaMapper,
@@ -47,6 +47,7 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers.Mappers
                 message.RevistaPublicacionTitulo = model.RevistaPublicacion.Titulo;
 
             message.EditorialObraTraducidas = editorialObraTraducidaMapper.Map(model.EditorialObraTraducidas.Cast<EditorialProducto>().ToArray());
+            message.CoautorExternoObraTraducidas = coautorExternoObraTraducidaMapper.Map(model.CoautorExternoObraTraducidas.Cast<CoautorExternoProducto>().ToArray());
             if (model.AreaTematica != null)
                 message.LineaTematicaId = model.AreaTematica.LineaTematica.Id;
 

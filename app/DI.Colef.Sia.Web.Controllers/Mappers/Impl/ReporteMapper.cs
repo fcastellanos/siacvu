@@ -11,14 +11,14 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers.Mappers
     public class ReporteMapper : AutoFormMapper<Reporte, ReporteForm>, IReporteMapper
     {
         readonly ICatalogoService catalogoService;
-        readonly ICoautorExternoReporteMapper coautorExternoReporteMapper;
+        readonly ICoautorExternoProductoMapper<CoautorExternoProducto> coautorExternoReporteMapper;
         readonly ICoautorInternoReporteMapper coautorInternoReporteMapper;
         readonly IProyectoService proyectoService;
         readonly IInstitucionProductoMapper<InstitucionReporte> institucionReporteMapper;
         private Usuario usuarioReporte;
 
         public ReporteMapper(IRepository<Reporte> repository, ICatalogoService catalogoService,
-                             ICoautorExternoReporteMapper coautorExternoReporteMapper, ICoautorInternoReporteMapper coautorInternoReporteMapper,
+                             ICoautorExternoProductoMapper<CoautorExternoProducto> coautorExternoReporteMapper, ICoautorInternoReporteMapper coautorInternoReporteMapper,
                              IProyectoService proyectoService, IInstitucionProductoMapper<InstitucionReporte> institucionReporteMapper)
             : base(repository)
         {
@@ -38,6 +38,7 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers.Mappers
         {
             var message = base.Map(model);
             message.InstitucionReportes = institucionReporteMapper.Map(model.InstitucionReportes.Cast<InstitucionProducto>().ToArray());
+            message.CoautorExternoReportes = coautorExternoReporteMapper.Map(model.CoautorExternoReportes.Cast<CoautorExternoProducto>().ToArray());
 
             return message;
         }

@@ -15,11 +15,10 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers.Productos
     [HandleError]
     public class ReporteController : BaseController<Reporte, ReporteForm>
     {
-        readonly ICoautorExternoReporteMapper coautorExternoReporteMapper;
+        readonly ICoautorExternoProductoMapper<CoautorExternoReporte> coautorExternoReporteMapper;
         readonly ICoautorInternoReporteMapper coautorInternoReporteMapper;
         readonly ICustomCollection customCollection;
         readonly IInstitucionProductoMapper<InstitucionReporte> institucionReporteMapper;
-        readonly IInvestigadorExternoMapper investigadorExternoMapper;
         readonly IInvestigadorMapper investigadorMapper;
         readonly IInvestigadorService investigadorService;
         readonly ILineaTematicaMapper lineaTematicaMapper;
@@ -36,7 +35,7 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers.Productos
                                  IProyectoMapper proyectoMapper,
                                  IInvestigadorMapper investigadorMapper,
                                  IInvestigadorService investigadorService,
-                                 ICoautorExternoReporteMapper coautorExternoReporteMapper,
+                                 ICoautorExternoProductoMapper<CoautorExternoReporte> coautorExternoReporteMapper,
                                  ICustomCollection customCollection,
                                  ICoautorInternoReporteMapper coautorInternoReporteMapper,
                                  ISearchService searchService,
@@ -402,105 +401,6 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers.Productos
         }
 
         [Authorize]
-        [AcceptVerbs(HttpVerbs.Get)]
-        public ActionResult NewCoautorExterno(int id, bool esAlfabeticamente)
-        {
-            var reporte = reporteService.GetReporteById(id);
-            var form = new CoautorForm
-                           {
-                               Controller = "Reporte",
-                               IdName = "ReporteId",
-                               InvestigadorExterno = new InvestigadorExternoForm(),
-                               CoautorSeOrdenaAlfabeticamente = esAlfabeticamente
-                           };
-
-            if (reporte != null)
-                form.Id = reporte.Id;
-
-            return Rjs("NewCoautorExterno", form);
-        }
-
-        [CustomTransaction]
-        [Authorize]
-        [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult AddCoautorExterno([Bind(Prefix = "CoautorExterno")] CoautorExternoProductoForm form,
-                                              int reporteId)
-        {
-            var investigadorExternoForm = new InvestigadorExternoForm
-                                              {
-                                                  Nombre = form.Nombre,
-                                                  ApellidoPaterno = form.ApellidoPaterno,
-                                                  ApellidoMaterno = form.ApellidoMaterno
-                                              };
-
-            var investigadorExterno = investigadorExternoMapper.Map(investigadorExternoForm);
-
-            ModelState.AddModelErrors(investigadorExterno.ValidationResults(), false, "CoautorExterno", String.Empty);
-            if (!ModelState.IsValid)
-            {
-                return Rjs("ModelError");
-            }
-
-            investigadorExterno.CreadoPor = CurrentUser();
-            investigadorExterno.ModificadoPor = CurrentUser();
-
-            catalogoService.SaveInvestigadorExterno(investigadorExterno);
-
-            form.InvestigadorExternoId = investigadorExterno.Id;
-            var coautorExternoReporte = coautorExternoReporteMapper.Map(form);
-
-            ModelState.AddModelErrors(coautorExternoReporte.ValidationResults(), false, "CoautorExterno", String.Empty);
-            if (!ModelState.IsValid)
-            {
-                return Rjs("ModelError");
-            }
-
-            if (reporteId != 0)
-            {
-                coautorExternoReporte.CreadoPor = CurrentUser();
-                coautorExternoReporte.ModificadoPor = CurrentUser();
-
-                var reporte = reporteService.GetReporteById(reporteId);
-
-                var alreadyHasIt =
-                    reporte.CoautorExternoReportes.Where(
-                        x => x.InvestigadorExterno.Id == coautorExternoReporte.InvestigadorExterno.Id).Count();
-
-                if (alreadyHasIt == 0)
-                {
-                    reporte.AddCoautorExterno(coautorExternoReporte);
-                    reporteService.SaveReporte(reporte);
-                }
-            }
-
-            var coautorExternoReporteForm = coautorExternoReporteMapper.Map(coautorExternoReporte);
-            coautorExternoReporteForm.ParentId = reporteId;
-
-            return Rjs("AddCoautorExterno", coautorExternoReporteForm);
-        }
-
-        [CustomTransaction]
-        [Authorize]
-        [AcceptVerbs(HttpVerbs.Delete)]
-        public ActionResult DeleteCoautorExterno(int id, int investigadorExternoId)
-        {
-            var reporte = reporteService.GetReporteById(id);
-
-            if (reporte != null)
-            {
-                var coautor =
-                    reporte.CoautorExternoReportes.Where(x => x.InvestigadorExterno.Id == investigadorExternoId).First();
-                reporte.DeleteCoautorExterno(coautor);
-
-                reporteService.SaveReporte(reporte);
-            }
-
-            var form = new CoautorForm {ModelId = id, InvestigadorExternoId = investigadorExternoId};
-
-            return Rjs("DeleteCoautorExterno", form);
-        }
-
-        [Authorize]
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult Deactivate(int id)
         {
@@ -516,76 +416,52 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers.Productos
             return Rjs("Deactivate", reporteForm);
         }
 
-        //[Authorize]
-        //[AcceptVerbs(HttpVerbs.Get)]
-        //public ActionResult NewInstitucion(int id)
-        //{
-        //    var reporte = reporteService.GetReporteById(id);
+        protected override void DeleteCoautorExternoInModel(Reporte model, int coautorExternoId)
+        {
+            if (model == null) return;
+            var coautor =
+                model.CoautorExternoReportes.Where(x => x.InvestigadorExterno.Id == coautorExternoId).First();
+            model.DeleteCoautorExterno(coautor);
 
-        //    var form = new InstitucionForm {Controller = "Reporte", IdName = "ReporteId"};
+            reporteService.SaveReporte(model, true);
+        }
 
-        //    if (reporte != null)
-        //        form.Id = reporte.Id;
+        protected override bool SaveCoautorExternoToModel(Reporte model, CoautorExternoProducto coautorExternoProducto)
+        {
+            ModelState.AddModelErrors(model.ValidationResults(), true, "Reporte");
+            if (!ModelState.IsValid)
+            {
+                return false;
+            }
 
-        //    return Rjs("NewInstitucion", form);
-        //}
+            var alreadyHasIt =
+                model.CoautorExternoReportes.Where(
+                    x => x.InvestigadorExterno.Id == coautorExternoProducto.InvestigadorExterno.Id).Count();
 
-        //[CustomTransaction]
-        //[Authorize]
-        //[AcceptVerbs(HttpVerbs.Post)]
-        //public ActionResult AddInstitucion([Bind(Prefix = "Institucion")] InstitucionProductoForm form, int reporteId)
-        //{
-        //    var institucionReporte = institucionReporteMapper.Map(form);
+            if (alreadyHasIt == 0)
+            {
+                model.AddCoautorExterno(coautorExternoProducto);
+                reporteService.SaveReporte(model);
+            }
 
-        //    ModelState.AddModelErrors(institucionReporte.ValidationResults(), false, "Institucion", String.Empty);
-        //    if (!ModelState.IsValid)
-        //    {
-        //        return Rjs("ModelError");
-        //    }
+            return alreadyHasIt == 0;
+        }
 
-        //    if (reporteId != 0)
-        //    {
-        //        institucionReporte.CreadoPor = CurrentUser();
-        //        institucionReporte.ModificadoPor = CurrentUser();
+        protected override CoautorExternoProducto MapCoautorExternoProductoMessage(CoautorExternoProductoForm form)
+        {
+            return coautorExternoReporteMapper.Map(form);
+        }
 
-        //        var reporte = reporteService.GetReporteById(reporteId);
+        protected override CoautorExternoProductoForm MapCoautorExternoProductoModel(CoautorExternoProducto model, int parentId)
+        {
+            var coautorExternoReporteform = coautorExternoReporteMapper.Map(model as CoautorExternoReporte);
+            coautorExternoReporteform.ParentId = parentId;
 
-        //        var alreadyHasIt =
-        //            reporte.InstitucionReportes.Where(
-        //                x => x.Institucion.Id == institucionReporte.Institucion.Id).Count();
+            if (model.Institucion != null)
+                coautorExternoReporteform.InstitucionNombre = model.Institucion.Nombre;
 
-        //        if (alreadyHasIt == 0)
-        //        {
-        //            reporte.AddInstitucion(institucionReporte);
-        //            reporteService.SaveReporte(reporte);
-        //        }
-        //    }
-
-        //    var institucionReporteForm = institucionReporteMapper.Map(institucionReporte);
-        //    institucionReporteForm.ParentId = reporteId;
-
-        //    return Rjs("AddInstitucion", institucionReporteForm);
-        //}
-
-        //[CustomTransaction]
-        //[Authorize]
-        //[AcceptVerbs(HttpVerbs.Delete)]
-        //public ActionResult DeleteInstitucion(int id, int institucionId)
-        //{
-        //    var reporte = reporteService.GetReporteById(id);
-
-        //    if (reporte != null)
-        //    {
-        //        var institucion = reporte.InstitucionReportes.Where(x => x.Institucion.Id == institucionId).First();
-        //        reporte.DeleteInstitucion(institucion);
-
-        //        reporteService.SaveReporte(reporte);
-        //    }
-
-        //    var form = new InstitucionForm {ModelId = id, InstitucionId = institucionId};
-
-        //    return Rjs("DeleteInstitucion", form);
-        //}
+            return coautorExternoReporteform;
+        }
 
         protected override void DeleteInstitucionInModel(Reporte model, int institucionId)
         {
