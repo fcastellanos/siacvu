@@ -14,7 +14,7 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers.Mappers
         readonly ICoautorExternoProductoMapper<CoautorExternoProducto> coautorExternoCapituloMapper;
         readonly ICoautorInternoCapituloMapper coautorInternoCapituloMapper;
         readonly IAutorInternoCapituloMapper autorInternoCapituloMapper;
-        readonly IAutorExternoCapituloMapper autorExternoCapituloMapper;
+        readonly IAutorExternoProductoMapper<AutorExternoProducto> autorExternoCapituloMapper;
         readonly IProyectoService proyectoService;
         readonly IEditorialProductoMapper<EditorialCapitulo> editorialCapituloMapper;
         private Usuario usuarioCapitulo;
@@ -24,7 +24,7 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers.Mappers
                               ICoautorExternoProductoMapper<CoautorExternoProducto> coautorExternoCapituloMapper,
                               ICoautorInternoCapituloMapper coautorInternoCapituloMapper,
                               IAutorInternoCapituloMapper autorInternoCapituloMapper,
-                              IAutorExternoCapituloMapper autorExternoCapituloMapper,
+                              IAutorExternoProductoMapper<AutorExternoProducto> autorExternoCapituloMapper,
                               IProyectoService proyectoService, IEditorialProductoMapper<EditorialCapitulo> editorialCapituloMapper) 
 			: base(repository)
         {
@@ -48,6 +48,7 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers.Mappers
 
             message.EditorialCapitulos = editorialCapituloMapper.Map(model.EditorialCapitulos.Cast<EditorialProducto>().ToArray());
             message.CoautorExternoCapitulos = coautorExternoCapituloMapper.Map(model.CoautorExternoCapitulos.Cast<CoautorExternoProducto>().ToArray());
+            message.AutorExternoCapitulos = autorExternoCapituloMapper.Map(model.AutorExternoCapitulos.Cast<AutorExternoProducto>().ToArray());
 
             if (model.AreaTematica != null)
                 message.LineaTematicaId = model.AreaTematica.LineaTematica.Id;

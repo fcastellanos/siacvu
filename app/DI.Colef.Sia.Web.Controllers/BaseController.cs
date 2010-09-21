@@ -467,6 +467,97 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers
 
         [Authorize]
         [AcceptVerbs(HttpVerbs.Get)]
+        public ActionResult NewAutorExterno(int id, bool esAlfabeticamente)
+        {
+            var model = GetModelById(id);
+
+            var form = new AutorForm
+            {
+                InvestigadorExterno = new InvestigadorExternoForm(),
+                AutorSeOrdenaAlfabeticamente = esAlfabeticamente
+            };
+
+            if (model != null)
+                form.Id = model.Id;
+
+            return Rjs("NewAutorExterno", form);
+        }
+
+        [CustomTransaction]
+        [Authorize]
+        [AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult AddAutorExterno([Bind(Prefix = "AutorExterno")] AutorExternoProductoForm form, int modelId)
+        {
+            var investigadorExternoForm = new InvestigadorExternoForm
+            {
+                Nombre = form.Nombre,
+                ApellidoPaterno = form.ApellidoPaterno,
+                ApellidoMaterno = form.ApellidoMaterno
+            };
+
+            var investigadorExterno = investigadorExternoMapper.Map(investigadorExternoForm);
+
+            ModelState.AddModelErrors(investigadorExterno.ValidationResults(), false, "AutorExterno", String.Empty);
+            if (!ModelState.IsValid)
+            {
+                return Rjs("ModelError");
+            }
+
+            investigadorExterno.CreadoPor = CurrentUser();
+            investigadorExterno.ModificadoPor = CurrentUser();
+
+            catalogoService.SaveInvestigadorExterno(investigadorExterno);
+
+            form.InvestigadorExternoId = investigadorExterno.Id;
+            var autorExternoProducto = MapAutorExternoProductoMessage(form);
+
+            ModelState.AddModelErrors(autorExternoProducto.ValidationResults(), false, "AutorExterno", String.Empty);
+            if (!ModelState.IsValid)
+            {
+                return Rjs("ModelError");
+            }
+
+            var added = true;
+
+            if (modelId != 0)
+            {
+                autorExternoProducto.CreadoPor = CurrentUser();
+                autorExternoProducto.ModificadoPor = CurrentUser();
+
+                var model = GetModelById(modelId);
+                added = SaveAutorExternoToModel(model, autorExternoProducto);
+            }
+
+            if (!added && !ModelState.IsValid)
+            {
+                ViewData["Rollback"] = true;
+                return Rjs("AutorExternoAddError");
+            }
+
+            var autorExternoProductoForm = added
+                                                 ? MapAutorExternoProductoModel(autorExternoProducto, modelId)
+                                                 : new AutorExternoProductoForm();
+
+            return Rjs(added ? "AddAutorExterno" : "HideAutorExternoForm", autorExternoProductoForm);
+        }
+
+        [CustomTransaction]
+        [Authorize]
+        [AcceptVerbs(HttpVerbs.Delete)]
+        public ActionResult DeleteAutorExterno(int id, int investigadorExternoId)
+        {
+            var model = GetModelById(id);
+
+            if (model != null)
+                DeleteAutorExternoInModel(model, investigadorExternoId);
+
+            var form = new AutorForm { InvestigadorExternoId = investigadorExternoId };
+
+            return Rjs("DeleteAutorExterno", form);
+        }
+
+        [Authorize]
+        [AcceptVerbs(HttpVerbs.Get)]
         public ActionResult NewInstitucion(int id)
         {
             var model = GetModelById(id);
@@ -585,6 +676,26 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers
         }
 
         protected virtual InstitucionProducto MapInstitucionMessage(InstitucionProductoForm form)
+        {
+            throw new NotSupportedException();
+        }
+
+        protected virtual void DeleteAutorExternoInModel(TModel model, int autorExternoId)
+        {
+            throw new NotSupportedException();
+        }
+
+        protected virtual bool SaveAutorExternoToModel(TModel model, AutorExternoProducto autorExternoProducto)
+        {
+            throw new NotSupportedException();
+        }
+
+        protected virtual AutorExternoProducto MapAutorExternoProductoMessage(AutorExternoProductoForm form)
+        {
+            throw new NotSupportedException();
+        }
+
+        protected virtual AutorExternoProductoForm MapAutorExternoProductoModel(AutorExternoProducto model, int parentId)
         {
             throw new NotSupportedException();
         }

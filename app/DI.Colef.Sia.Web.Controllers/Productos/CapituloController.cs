@@ -15,7 +15,7 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers.Productos
     public class CapituloController : BaseController<Capitulo, CapituloForm>
     {
         readonly IAreaMapper areaMapper;
-        readonly IAutorExternoCapituloMapper autorExternoCapituloMapper;
+        readonly IAutorExternoProductoMapper<AutorExternoCapitulo> autorExternoCapituloMapper;
         readonly IAutorInternoCapituloMapper autorInternoCapituloMapper;
         readonly ICapituloMapper capituloMapper;
         readonly ICapituloService capituloService;
@@ -32,7 +32,7 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers.Productos
                                   IArchivoService archivoService,
                                   ICoautorExternoProductoMapper<CoautorExternoCapitulo> coautorExternoCapituloMapper,
                                   ICoautorInternoCapituloMapper coautorInternoCapituloMapper,
-                                  IAutorExternoCapituloMapper autorExternoCapituloMapper,
+                                  IAutorExternoProductoMapper<AutorExternoCapitulo> autorExternoCapituloMapper,
                                   IAutorInternoCapituloMapper autorInternoCapituloMapper, ISearchService searchService,
                                   ICustomCollection customCollection, IAreaTematicaMapper areaTematicaMapper,
                                   ILineaTematicaMapper lineaTematicaMapper, IAreaMapper areaMapper,
@@ -481,106 +481,6 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers.Productos
         }
 
         [Authorize]
-        [AcceptVerbs(HttpVerbs.Get)]
-        public ActionResult NewAutorExterno(int id, bool esAlfabeticamente)
-        {
-            var capitulo = capituloService.GetCapituloById(id);
-
-            var form = new AutorForm
-                           {
-                               Controller = "Capitulo",
-                               IdName = "CapituloId",
-                               InvestigadorExterno = new InvestigadorExternoForm(),
-                               AutorSeOrdenaAlfabeticamente = esAlfabeticamente
-                           };
-
-            if (capitulo != null)
-                form.Id = capitulo.Id;
-
-            return Rjs("NewAutorExterno", form);
-        }
-
-        [CustomTransaction]
-        [Authorize]
-        [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult AddAutorExterno(
-            [Bind(Prefix = "AutorExterno")] AutorExternoProductoForm form, int capituloId)
-        {
-            var investigadorExternoForm = new InvestigadorExternoForm
-                                              {
-                                                  Nombre = form.Nombre,
-                                                  ApellidoPaterno = form.ApellidoPaterno,
-                                                  ApellidoMaterno = form.ApellidoMaterno
-                                              };
-
-            var investigadorExterno = investigadorExternoMapper.Map(investigadorExternoForm);
-
-            ModelState.AddModelErrors(investigadorExterno.ValidationResults(), false, "AutorExterno", String.Empty);
-            if (!ModelState.IsValid)
-            {
-                return Rjs("ModelError");
-            }
-
-            investigadorExterno.CreadoPor = CurrentUser();
-            investigadorExterno.ModificadoPor = CurrentUser();
-
-            catalogoService.SaveInvestigadorExterno(investigadorExterno);
-
-            form.InvestigadorExternoId = investigadorExterno.Id;
-            var autorExternoCapitulo = autorExternoCapituloMapper.Map(form);
-
-            ModelState.AddModelErrors(autorExternoCapitulo.ValidationResults(), false, "AutorExterno", String.Empty);
-            if (!ModelState.IsValid)
-            {
-                return Rjs("ModelError");
-            }
-
-            if (capituloId != 0)
-            {
-                autorExternoCapitulo.CreadoPor = CurrentUser();
-                autorExternoCapitulo.ModificadoPor = CurrentUser();
-
-                var capitulo = capituloService.GetCapituloById(capituloId);
-
-                var alreadyHasIt =
-                    capitulo.AutorExternoCapitulos.Where(
-                        x => x.InvestigadorExterno.Id == autorExternoCapitulo.InvestigadorExterno.Id).Count();
-
-                if (alreadyHasIt == 0)
-                {
-                    capitulo.AddAutorExterno(autorExternoCapitulo);
-                    capituloService.SaveCapitulo(capitulo);
-                }
-            }
-
-            var autorExternoCapituloForm = autorExternoCapituloMapper.Map(autorExternoCapitulo);
-            autorExternoCapituloForm.ParentId = capituloId;
-
-            return Rjs("AddAutorExterno", autorExternoCapituloForm);
-        }
-
-        [CustomTransaction]
-        [Authorize]
-        [AcceptVerbs(HttpVerbs.Delete)]
-        public ActionResult DeleteAutorExterno(int id, int investigadorExternoId)
-        {
-            var capitulo = capituloService.GetCapituloById(id);
-
-            if (capitulo != null)
-            {
-                var autor =
-                    capitulo.AutorExternoCapitulos.Where(x => x.InvestigadorExterno.Id == investigadorExternoId).First();
-                capitulo.DeleteAutorExterno(autor);
-
-                capituloService.SaveCapitulo(capitulo);
-            }
-
-            var form = new AutorForm {ModelId = id, InvestigadorExternoId = investigadorExternoId};
-
-            return Rjs("DeleteAutorExterno", form);
-        }
-
-        [Authorize]
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult Deactivate(int id)
         {
@@ -754,13 +654,60 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers.Productos
 
         protected override CoautorExternoProductoForm MapCoautorExternoProductoModel(CoautorExternoProducto model, int parentId)
         {
-            var coautorExternoCapituloform = coautorExternoCapituloMapper.Map(model as CoautorExternoLibro);
+            var coautorExternoCapituloform = coautorExternoCapituloMapper.Map(model as CoautorExternoCapitulo);
             coautorExternoCapituloform.ParentId = parentId;
 
             if (model.Institucion != null)
                 coautorExternoCapituloform.InstitucionNombre = model.Institucion.Nombre;
 
             return coautorExternoCapituloform;
+        }
+
+        protected override void DeleteAutorExternoInModel(Capitulo model, int autorExternoId)
+        {
+            if (model == null) return;
+            var autor =
+                model.AutorExternoCapitulos.Where(x => x.InvestigadorExterno.Id == autorExternoId).First();
+            model.DeleteAutorExterno(autor);
+
+            capituloService.SaveCapitulo(model, true);
+        }
+
+        protected override bool SaveAutorExternoToModel(Capitulo model, AutorExternoProducto autorExternoProducto)
+        {
+            ModelState.AddModelErrors(model.ValidationResults(), true, "Capitulo");
+            if (!ModelState.IsValid)
+            {
+                return false;
+            }
+
+            var alreadyHasIt =
+                model.AutorExternoCapitulos.Where(
+                    x => x.InvestigadorExterno.Id == autorExternoProducto.InvestigadorExterno.Id).Count();
+
+            if (alreadyHasIt == 0)
+            {
+                model.AddAutorExterno(autorExternoProducto);
+                capituloService.SaveCapitulo(model);
+            }
+
+            return alreadyHasIt == 0;
+        }
+
+        protected override AutorExternoProducto MapAutorExternoProductoMessage(AutorExternoProductoForm form)
+        {
+            return autorExternoCapituloMapper.Map(form);
+        }
+
+        protected override AutorExternoProductoForm MapAutorExternoProductoModel(AutorExternoProducto model, int parentId)
+        {
+            var autorExternoCapituloForm = autorExternoCapituloMapper.Map(model as AutorExternoCapitulo);
+            autorExternoCapituloForm.ParentId = parentId;
+
+            if (model.Institucion != null)
+                autorExternoCapituloForm.InstitucionNombre = model.Institucion.Nombre;
+
+            return autorExternoCapituloForm;
         }
 
         protected override Capitulo GetModelById(int id)
