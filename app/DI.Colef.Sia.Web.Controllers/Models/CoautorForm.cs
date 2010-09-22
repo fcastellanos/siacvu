@@ -16,7 +16,5 @@
 
         public int CreadoPorId { get; set; }
         public bool CoautorSeOrdenaAlfabeticamente { get; set; }
-
-        //public string UrlAction { get; set; }
     }
 }

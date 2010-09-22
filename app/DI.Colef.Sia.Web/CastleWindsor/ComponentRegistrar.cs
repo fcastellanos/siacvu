@@ -61,10 +61,10 @@ namespace DecisionesInteligentes.Colef.Sia.Web.CastleWindsor
                                    typeof (IEditorialProductoMapper<>), typeof (EditorialProductoMapper<>));
             container.AddComponent("coautorExternoProductoMapper",
                                    typeof(ICoautorExternoProductoMapper<>), typeof(CoautorExternoProductoMapper<>));
-            container.AddComponent("autorExternoProductoMapper",
-                                   typeof(IAutorExternoProductoMapper<>), typeof(AutorExternoProductoMapper<>));
             container.AddComponent("institucionProductoMapper", typeof (IInstitucionProductoMapper<>),
                                    typeof (InstitucionProductoMapper<>));
+            container.AddComponent("autorExternoProductoMapper",
+                                   typeof(IAutorExternoProductoMapper<>), typeof(AutorExternoProductoMapper<>));
         }
 
         private static void AddApplicationServicesTo(IWindsorContainer container)

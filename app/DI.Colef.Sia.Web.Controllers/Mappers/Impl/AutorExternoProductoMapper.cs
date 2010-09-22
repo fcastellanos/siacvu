@@ -18,7 +18,7 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers.Mappers
         readonly IRepository<TModel> repository;
         readonly ICatalogoService catalogoService;
 
-        public AutorExternoAutoMapper(IRepository<TModel> repository, ICatalogoService catalogoService) : base(null)
+        public AutorExternoAutoMapper(IRepository<TModel> repository, ICatalogoService catalogoService): base(null)
         {
             this.repository = repository;
             this.catalogoService = catalogoService;
@@ -27,6 +27,14 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers.Mappers
         protected override int GetIdFromMessage(AutorExternoProductoForm message)
         {
             return message.Id;
+        }
+
+        public override AutorExternoProducto Map(AutorExternoProductoForm message)
+        {
+            var model = repository.Get(GetIdFromMessage(message)) ?? new TModel();
+            MapToModel(message, model as AutorExternoProducto);
+
+            return model as AutorExternoProducto;
         }
 
         protected override void MapToModel(AutorExternoProductoForm message, AutorExternoProducto model)
@@ -54,14 +62,6 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers.Mappers
             }
 
             model.ModificadoEl = DateTime.Now;
-        }
-
-        public override AutorExternoProducto Map(AutorExternoProductoForm message)
-        {
-            var model = repository.Get(GetIdFromMessage(message)) ?? new TModel();
-            MapToModel(message, model as AutorExternoProducto);
-
-            return model as AutorExternoProducto;
         }
 
         public new AutorExternoProductoForm[] Map(AutorExternoProducto[] model)

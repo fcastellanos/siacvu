@@ -1,5 +1,3 @@
-using System;
-
 namespace DecisionesInteligentes.Colef.Sia.Web.Controllers.Models
 {
     public class AutorForm
@@ -16,6 +14,7 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers.Models
 
         public InvestigadorExternoForm InvestigadorExterno { get; set; }
 
+        public int CreadoPorId { get; set; }
         public bool AutorSeOrdenaAlfabeticamente { get; set; }
     }
 }
