@@ -1,6 +1,4 @@
 <%@ Control Language="C#" AutoEventWireup="true" Inherits="System.Web.Mvc.ViewUserControl<EventoForm>" %>
-<%@ Import Namespace="DecisionesInteligentes.Colef.Sia.Web.Controllers"%>
-<%@ Import Namespace="DecisionesInteligentes.Colef.Sia.Web.Extensions"%>
 <%@ Import Namespace="DecisionesInteligentes.Colef.Sia.Web.Controllers.Models"%>
 
 $('#EventoNombre').val('<%=Model.Nombre%>');

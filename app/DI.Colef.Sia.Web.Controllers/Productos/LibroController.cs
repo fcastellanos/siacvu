@@ -422,6 +422,10 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers.Productos
         public ActionResult AddEvento([Bind(Prefix = "Evento")] EventoForm form, int libroId)
         {
             var evento = eventoMapper.Map(form, CurrentUser(), CurrentInvestigador());
+            evento.CreadoEl = DateTime.Now;
+            evento.ModificadoEl = DateTime.Now;
+            evento.FechaInicial = DateTime.Parse(form.FechaEvento);
+            evento.FechaFinal = evento.FechaInicial.AddDays(1);
 
             ModelState.AddModelErrors(evento.ValidationResults(), true, String.Empty);
             if (!ModelState.IsValid)
