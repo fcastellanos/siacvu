@@ -22,10 +22,10 @@
     <%=Html.ValidationMessage("FormatoPublicacion")%>
 </p>
 <p>
-    <label>Tipo de producto</label>
-    <%=Html.DropDownList("TipoProducto", Model.TiposLibros.CreateSelectList<CustomSelectForm>("Id", "Nombre"),
+    <label>Tipo de libro</label>
+    <%=Html.DropDownList("TipoLibro", Model.TiposLibros.CreateSelectList<CustomSelectForm>("Id", "Nombre"),
                 "Seleccione ...", new { @class = "requerido" })%>
-    <%=Html.ValidationMessage("TipoProducto")%>
+    <%=Html.ValidationMessage("TipoLibro")%>
 </p>
 <p>
     <label>Tipo de obra</label>

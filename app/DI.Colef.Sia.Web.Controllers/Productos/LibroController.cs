@@ -604,7 +604,7 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers.Productos
 
         void FormSetCombos(LibroForm form)
         {
-            ViewData["TipoProducto"] = form.TipoProducto;
+            ViewData["TipoLibro"] = form.TipoLibro;
             ViewData["FormatoPublicacion"] = form.FormatoPublicacion;
             ViewData["Edicion"] = form.Edicion;
             ViewData["EstadoProducto"] = form.EstadoProducto;
