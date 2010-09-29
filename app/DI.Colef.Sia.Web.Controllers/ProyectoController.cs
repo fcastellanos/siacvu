@@ -22,7 +22,6 @@ namespace DecisionesInteligentes.Colef.Sia.Web.Controllers
         readonly IEstudianteProyectoMapper estudianteProyectoMapper;
         readonly IFondoConacytMapper fondoConacytMapper;
         readonly IGradoAcademicoMapper gradoAcademicoMapper;
-        readonly IInvestigadorExternoMapper investigadorExternoMapper;
         readonly ILineaTematicaMapper lineaTematicaMapper;
         readonly IMonedaMapper monedaMapper;
         readonly IParticipanteExternoProyectoMapper participanteExternoProyectoMapper;
